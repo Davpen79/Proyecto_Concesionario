@@ -4,6 +4,7 @@ import Model.Cliente;
 import Model.Coche;
 import Model.Venta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GestionConcesionario {
@@ -20,9 +21,17 @@ public class GestionConcesionario {
 
     }
 
-    public List buscarCoche (List<Coche> coche){
-        List cochesEncontrados = null;
+    public List<Coche> buscarCoche (List<Coche> coche){
+        List<Coche> cochesEncontrados = new ArrayList<>();
         return cochesEncontrados;
+    }
+
+    public void mostrarCoche (){
+
+    }
+
+    public void listarVentas(){
+
     }
 
 }

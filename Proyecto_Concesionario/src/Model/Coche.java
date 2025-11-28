@@ -9,10 +9,15 @@ public class Coche {
     private String modeloCoche;
     private int anhoCoche;
     private double kilometrosCoche;
-    private int precioCoche;
+    private double precioCoche;
     private String matriculaCoche;
+    private boolean cocheVendido;
 
     //getters de Coche
+
+    public boolean isCocheVendido() {
+        return cocheVendido;
+    }
 
     public String getMarcaCoche() {
         return marcaCoche;
@@ -30,7 +35,7 @@ public class Coche {
         return kilometrosCoche;
     }
 
-    public int getPrecioCoche() {
+    public double getPrecioCoche() {
         return precioCoche;
     }
 
@@ -39,6 +44,14 @@ public class Coche {
     }
 
     //setters de Coche
+
+    public void setPrecioCoche(double precioCoche) {
+        this.precioCoche = precioCoche;
+    }
+
+    public void setCocheVendido(boolean cocheVendido) {
+        this.cocheVendido = cocheVendido;
+    }
 
     public void setMarcaCoche(String marcaCoche) {
         this.marcaCoche = marcaCoche;
@@ -56,23 +69,20 @@ public class Coche {
         this.kilometrosCoche = kilometrosCoche;
     }
 
-    public void setPrecioCoche(int precioCoche) {
-        this.precioCoche = precioCoche;
-    }
-
     public void setMatriculaCoche(String matriculaCoche) {
         this.matriculaCoche = matriculaCoche;
     }
 
     //Constructor de Coche
 
-    public Coche(String marcaCoche, String modeloCoche, int anhoCoche, double kilometrosCoche, int precioCoche, String matriculaCoche) {
+    public Coche(String marcaCoche, String modeloCoche, int anhoCoche, double kilometrosCoche, double precioCoche, String matriculaCoche, boolean cocheVendido) {
         this.marcaCoche = marcaCoche;
         this.modeloCoche = modeloCoche;
         this.anhoCoche = anhoCoche;
         this.kilometrosCoche = kilometrosCoche;
         this.precioCoche = precioCoche;
         this.matriculaCoche = matriculaCoche;
+        this.cocheVendido = cocheVendido;
     }
 
 }

@@ -9,7 +9,7 @@ public class Venta {
     private Cliente clienteVenta;
     private Coche cocheVendido;
     private Date fechaVenta;
-    private int precioVenta;
+    private double precioVenta;
     private Vendedor vendedorVenta;
 
     //getters de Venta
@@ -34,7 +34,7 @@ public class Venta {
         return fechaVenta;
     }
 
-    public int getPrecioVenta() {
+    public double getPrecioVenta() {
         return precioVenta;
     }
 
