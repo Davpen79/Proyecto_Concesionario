@@ -8,8 +8,8 @@ public class Cliente {
     //Atributos de un Cliente
     private String nombreCliente;
     private String dniCliente;
-    private List<String> telefonoCliente;
-    private List<Coche> cocheCliente;
+    private String telefonoCliente;
+    //private List<Coche> cocheCliente; // complejidad innecesaria??
 
     //getters de un Cliente
 
@@ -21,13 +21,13 @@ public class Cliente {
         return dniCliente;
     }
 
-    public List<String> getTelefonoCliente() {
+    public String getTelefonoCliente() {
         return telefonoCliente;
     }
 
-    public List<Coche> getCocheCliente() {
-        return cocheCliente;
-    }
+    //public List<Coche> getCocheCliente() {
+    //    return cocheCliente;
+    //}
 
     //setters de un Cliente
 
@@ -39,20 +39,20 @@ public class Cliente {
         this.dniCliente = dniCliente;
     }
 
-    public void setTelefonoCliente(ArrayList<String> telefonoCliente) {
+    public void setTelefonoCliente(String telefonoCliente) {
         this.telefonoCliente = telefonoCliente;
     }
 
-    public void setCocheCliente(ArrayList<Coche> cocheCliente) {
-        this.cocheCliente = cocheCliente;
-    }
+    //public void setCocheCliente(ArrayList<Coche> cocheCliente) {
+    //    this.cocheCliente = cocheCliente;
+    //}
 
     //constructor de un Cliente
 
-    public Cliente(String nombreCliente, String dniCliente, ArrayList<String> telefonoCliente, ArrayList<Coche> cocheCliente) {
+    public Cliente(String nombreCliente, String dniCliente, String telefonoCliente) {
         this.nombreCliente = nombreCliente;
         this.dniCliente = dniCliente;
         this.telefonoCliente = telefonoCliente;
-        this.cocheCliente = cocheCliente;
+        //this.cocheCliente = cocheCliente;
     }
 }

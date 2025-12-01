@@ -1,12 +1,17 @@
 
+import Controller.GestionConcesionario;
 import View.MenuView;
 
 public class Programa {
 
+
     public static void main(String[] args) {
 
-        MenuView.menuPrincipal();
+        MenuView view = new MenuView();
+        GestionConcesionario gestionControlador = new GestionConcesionario(view);
+        gestionControlador.run();
 
+        //System.out.println();
 
     }
 }
