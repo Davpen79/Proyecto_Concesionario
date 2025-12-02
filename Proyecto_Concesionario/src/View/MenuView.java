@@ -29,7 +29,7 @@ public class MenuView {
         while (true) {
             //System.out.println("Selecciona una opción");
             opcion = sc.nextInt();
-            //borrar antes de entregar
+            //POrqué????
             sc.nextLine();
             if (opcion >= 1 && opcion <= 7) {
                 break;
@@ -85,10 +85,7 @@ public class MenuView {
 
     public void mostrarListaCoches(List<Coche> listaCoches) {
         for (Coche coche : listaCoches) {
-            System.out.println(coche.getMarcaCoche() + " " + coche.getModeloCoche() + " " + coche.getMatriculaCoche() +
-                    " - " + coche.getAnhoCoche() + " - " + coche.getKilometrosCoche() + " Kms" + " - " + coche.getPrecioCoche() +
-                    " €" + " - " + coche.isCocheVendido());
-
+            mostrarCoche(coche);
         }
     }
 
@@ -101,11 +98,8 @@ public class MenuView {
         }
         System.out.println("============ COCHES A LA VENTA ============");
         for (Coche coche : listaCochesEnVenta) {
-            System.out.println(coche.getMarcaCoche() + " " + coche.getModeloCoche() + " " + coche.getMatriculaCoche() +
-                    " - " + coche.getAnhoCoche() + " - " + coche.getKilometrosCoche() + " Kms" + " - " + coche.getPrecioCoche() +
-                    " €" + " - " + coche.isCocheVendido());
+            mostrarCoche(coche);
         }
-
     }
 
     public void buscarCoches(List<Coche> listaCoches) {
@@ -121,7 +115,6 @@ public class MenuView {
         if (opcion == 3) {
             buscarPorPrecio(listaCoches);
         }
-
     }
 
     private void buscarPorPrecio(List<Coche> listaCoches) {
@@ -133,7 +126,6 @@ public class MenuView {
             if (precioCoche >= precioMinimo && precioCoche <= precioMaximo) {
                 mostrarCoche(coche);
             }
-
         }
     }
 
@@ -172,16 +164,15 @@ public class MenuView {
 
         Cliente cliente = new Cliente(nombre, dni, telefono);
         return cliente;
-
     }
 
-    public void mostrarListaClientes(List<Cliente> listaClientes){
-        for (Cliente cliente : listaClientes){
+    public void mostrarListaClientes(List<Cliente> listaClientes) {
+        for (Cliente cliente : listaClientes) {
             System.out.println(cliente.getNombreCliente() + " " + cliente.getDniCliente() + " " + cliente.getTelefonoCliente());
         }
     }
 
-    public Venta registrarVenta() {
+    public void registrarVenta() {
         System.out.println("============ REGISTRAR VENTA ============");
         System.out.println("¿Cual es el Identificador de la Venta?");
         int nuevaVenta = sc.nextInt();
@@ -202,6 +193,6 @@ public class MenuView {
         System.out.println("¿Quien ha hecho la Venta?");
         String nombreVendedor = sc.nextLine();
 
-        return new Venta();
+        return;
     }
 }

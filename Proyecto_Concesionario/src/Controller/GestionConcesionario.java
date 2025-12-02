@@ -22,24 +22,7 @@ public class GestionConcesionario {
         loadListaClientes();
     }
 
-    public void anhadirCoche() {
-
-    }
-
-    public void registrarCliente(Cliente cliente) {
-
-    }
-
     public void registrarVenta(Venta venta) {
-
-    }
-
-    public List<Coche> buscarCoche(List<Coche> coche) {
-        List<Coche> cochesEncontrados = new ArrayList<>();
-        return cochesEncontrados;
-    }
-
-    public void mostrarCoche(Coche coche) {
 
     }
 
@@ -87,7 +70,7 @@ public class GestionConcesionario {
                 //view.mostrarListaClientes(listaClientes);
             }
             if (opcion == 5){
-                Venta nuevaVenta = view.registrarVenta();
+                //Venta nuevaVenta = view.registrarVenta();
             }
 
         }
@@ -95,21 +78,21 @@ public class GestionConcesionario {
 
     private void loadListaCoches() {
         this.listaCoches = new ArrayList<Coche>();
-        listaCoches.add(new Coche("SEAT", "Ibiza", 2018, 50000, 12000, "1234ABC", true));
+        listaCoches.add(new Coche("Seat", "Ibiza", 2018, 50000, 12000, "1234ABC", true));
         listaCoches.add(new Coche("Volkswagen", "Golf", 2020, 30000, 18000, "5678DEF", false));
         listaCoches.add(new Coche("Renault", "Clio", 2019, 40000, 13000, "9101GHI", false));
-        listaCoches.add(new Coche("FIAT", "Punto", 2017, 60000, 9000, "2345JKL", true));
-        listaCoches.add(new Coche("SEAT", "León", 2021, 20000, 20000, "6789MNO", false));
+        listaCoches.add(new Coche("Fiat", "Punto", 2017, 60000, 9000, "2345JKL", true));
+        listaCoches.add(new Coche("Seat", "León", 2021, 20000, 20000, "6789MNO", false));
         listaCoches.add(new Coche("Volkswagen", "Polo", 2018, 45000, 14000, "3456PQR", true));
         listaCoches.add(new Coche("Renault", "Mégane", 2020, 25000, 16000, "7890STU", false));
-        listaCoches.add(new Coche("FIAT", "Panda", 2016, 70000, 8000, "4567VWX", true));
+        listaCoches.add(new Coche("Fiat", "Panda", 2016, 70000, 8000, "4567VWX", true));
         listaCoches.add(new Coche("Volkswagen", "Passat", 2021, 15000, 22000, "1234BCD", false));
         listaCoches.add(new Coche("Renault", "Captur", 2018, 42000, 13500, "5678EFG", true));
-        listaCoches.add(new Coche("FIAT", "Panda", 2017, 55000, 9500, "9101HIJ", true));
-        listaCoches.add(new Coche("SEAT", "Arona", 2020, 28000, 17000, "2345KLM", false));
+        listaCoches.add(new Coche("Fiat", "Panda", 2017, 55000, 9500, "9101HIJ", true));
+        listaCoches.add(new Coche("Seat", "Arona", 2020, 28000, 17000, "2345KLM", false));
         listaCoches.add(new Coche("Volkswagen", "Tiguan", 2019, 32000, 19500, "6789NOP", true));
         listaCoches.add(new Coche("Renault", "Kadjar", 2021, 18000, 21000, "3456QRS", false));
-        listaCoches.add(new Coche("SEAT", "Ateca", 2019, 35000, 19000, "8901YZA", false));
+        listaCoches.add(new Coche("Seat", "Ateca", 2019, 35000, 19000, "8901YZA", false));
 
     }
 
