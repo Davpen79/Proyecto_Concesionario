@@ -7,6 +7,7 @@ import View.MenuView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class GestionConcesionario {
 
@@ -15,6 +16,8 @@ public class GestionConcesionario {
     public List<Venta> listaVentas = new ArrayList<>();
 
     private MenuView view;
+
+    Scanner sc = new Scanner(System.in);
 
     public GestionConcesionario(MenuView view) {
         this.view = view;
@@ -30,6 +33,27 @@ public class GestionConcesionario {
 
     }
 
+    public boolean anhadirCoche(Coche nuevoCoche){
+        //comprobar si el coche es valido
+        boolean nuevaMatricula = false;
+        String matricula = nuevoCoche.getMatriculaCoche();
+
+
+            for (Coche coche : listaCoches){
+                nuevaMatricula = true;
+                if (coche.getMatriculaCoche().equals(matricula)){
+                    nuevaMatricula = false;
+                    System.err.println("---> El Coche ya existe <---");
+                    break;
+                }
+            }
+
+        //si valido add a la lista
+
+        //si no valido return false;
+        return;
+    }
+
     public void run() {
 
         int opcion;
@@ -40,9 +64,9 @@ public class GestionConcesionario {
             opcion = newMenu.menuPrincipal();
 
             if (opcion == 1) {
-                Coche nuevoCoche = view.anhadirCoche(listaCoches);
-                listaCoches.add(nuevoCoche);
-
+                Coche nuevoCoche = view.menuAnhadirCoche(listaCoches);
+                boolean added = anhadirCoche(nuevoCoche);
+                if(!added) view.mostarError();
             }
             if (opcion == 2) {
 

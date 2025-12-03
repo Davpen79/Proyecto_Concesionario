@@ -39,7 +39,7 @@ public class MenuView {
         return opcion;
     }
 
-    public Coche anhadirCoche(List<Coche> listaCoches) {
+    public Coche menuAnhadirCoche(List<Coche> listaCoches) {
 
         System.out.println("============ AÑADIR COCHE ============");
         System.out.println("¿Cual es la MARCA del Coche?");
@@ -57,20 +57,8 @@ public class MenuView {
         System.out.println("¿Cual es el PRECIO del Coche");
         double precio = sc.nextDouble();
 
-        boolean nuevaMatricula = false;
-        String matricula = null;
-        while (!nuevaMatricula){
-            System.out.println("¿Cual es la MATRICULA del Coche?");
-            matricula = sc.next();
-            for (Coche coche : listaCoches){
-                nuevaMatricula = true;
-                if (coche.getMatriculaCoche().equals(matricula)){
-                    nuevaMatricula = false;
-                    System.err.println("---> El Coche ya existe <---");
-                    break;
-                }
-            }
-        }
+        System.out.println("¿Cual es la MATRICULA del Coche?");
+        String matricula = sc.next();
 
         System.out.println("¿El Coche está a la venta o ya ha sido vendido?");
         System.out.println("1. Está a la VENTA");
@@ -88,9 +76,10 @@ public class MenuView {
     }
 
     private void mostrarCoche(Coche coche) {
+        //crear variable para convertir boolean
         System.out.println(coche.getMarcaCoche() + " " + coche.getModeloCoche() + " " + coche.getMatriculaCoche() +
                 " - " + coche.getAnhoCoche() + " - " + coche.getKilometrosCoche() + " Kms" + " - " + coche.getPrecioCoche() +
-                " €" + " - " + coche.isCocheVendido());
+                " €" + " - " + (coche.isCocheVendido()));
     }
 
     public void mostrarListaCoches(List<Coche> listaCoches) {
