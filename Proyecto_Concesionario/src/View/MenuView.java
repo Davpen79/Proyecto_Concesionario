@@ -2,10 +2,8 @@ package View;
 
 import Model.Cliente;
 import Model.Coche;
-import Model.Venta;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -41,7 +39,7 @@ public class MenuView {
         return opcion;
     }
 
-    public Coche anhadirMenu() {
+    public Coche anhadirCoche(List<Coche> listaCoches) {
 
         System.out.println("============ AÑADIR COCHE ============");
         System.out.println("¿Cual es la MARCA del Coche?");
@@ -59,8 +57,20 @@ public class MenuView {
         System.out.println("¿Cual es el PRECIO del Coche");
         double precio = sc.nextDouble();
 
-        System.out.println("¿Cual es la MATRICULA del Coche?");
-        String matricula = sc.next();
+        boolean nuevaMatricula = false;
+        String matricula = null;
+        while (!nuevaMatricula){
+            System.out.println("¿Cual es la MATRICULA del Coche?");
+            matricula = sc.next();
+            for (Coche coche : listaCoches){
+                nuevaMatricula = true;
+                if (coche.getMatriculaCoche().equals(matricula)){
+                    nuevaMatricula = false;
+                    System.err.println("---> El Coche ya existe <---");
+                    break;
+                }
+            }
+        }
 
         System.out.println("¿El Coche está a la venta o ya ha sido vendido?");
         System.out.println("1. Está a la VENTA");
@@ -151,19 +161,32 @@ public class MenuView {
         }
     }
 
-    public Cliente registrarCliente() {
+    public Cliente registrarCliente(List<Cliente> listaClientes) {
         System.out.println("============ REGISTRAR CLIENTE ============");
         System.out.println("¿Cual es el NOMBRE del Cliente?");
         String nombre = sc.nextLine();
 
-        System.out.println("¿Cual es el DNI del Cliente?");
-        String dni = sc.nextLine();
+        boolean nuevoDni = false;
+        String dni = null;
+        while (!nuevoDni) {
+            System.out.println("¿Cual es el DNI del Cliente?");
+            dni = sc.nextLine();
+            for (Cliente cliente : listaClientes) {
+                nuevoDni = true;
+                if (cliente.getDniCliente().equals(dni)) {
+                    nuevoDni = false;
+                    System.err.println("---> El Cliente ya existe <---");
+                    break;
+                }
+            }
+        }
 
         System.out.println("¿Cual es el TELEFONO del Cliente?");
         String telefono = sc.nextLine();
 
-        Cliente cliente = new Cliente(nombre, dni, telefono);
-        return cliente;
+        Cliente nuevocliente = new Cliente(nombre, dni, telefono);
+
+        return nuevocliente;
     }
 
     public void mostrarListaClientes(List<Cliente> listaClientes) {
@@ -195,4 +218,6 @@ public class MenuView {
 
         return;
     }
+
+
 }

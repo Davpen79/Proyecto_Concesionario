@@ -40,7 +40,7 @@ public class GestionConcesionario {
             opcion = newMenu.menuPrincipal();
 
             if (opcion == 1) {
-                Coche nuevoCoche = view.anhadirMenu();
+                Coche nuevoCoche = view.anhadirCoche(listaCoches);
                 listaCoches.add(nuevoCoche);
 
             }
@@ -53,21 +53,10 @@ public class GestionConcesionario {
                 view.buscarCoches(listaCoches);
             }
             if (opcion == 4) {
-                Cliente nuevoCliente = view.registrarCliente();
-                String nuevoClienteDni = nuevoCliente.getDniCliente();
-                boolean clienteExiste = false;
-                for (Cliente cliente : listaClientes){
-                    if (cliente.getDniCliente().equals(nuevoClienteDni)){
-                        clienteExiste = true;
-                    }
-                }
-                if (clienteExiste == true){
-                    System.err.println("---> El Cliente ya existe <---");
-                }
-                else {
-                    listaClientes.add(nuevoCliente);
-                }
+                Cliente nuevoCliente = view.registrarCliente(listaClientes);
+                listaClientes.add(nuevoCliente);
                 //view.mostrarListaClientes(listaClientes);
+
             }
             if (opcion == 5){
                 //Venta nuevaVenta = view.registrarVenta();
