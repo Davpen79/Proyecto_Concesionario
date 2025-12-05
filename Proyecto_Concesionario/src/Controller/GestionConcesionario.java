@@ -2,9 +2,11 @@ package Controller;
 
 import Model.Cliente;
 import Model.Coche;
+import Model.Vendedor;
 import Model.Venta;
 import View.MenuView;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,6 +15,7 @@ public class GestionConcesionario {
 
     public List<Coche> listaCoches = new ArrayList<>();
     public List<Cliente> listaClientes = new ArrayList<>();
+    public List<Vendedor> listaVendedores = new ArrayList<>();
     public List<Venta> listaVentas = new ArrayList<>();
 
     private MenuView view;
@@ -33,25 +36,44 @@ public class GestionConcesionario {
 
     }
 
-    public boolean anhadirCoche(Coche nuevoCoche){
+    public boolean anhadirCoche(Coche nuevoCoche) {
         //comprobar si el coche es valido
         boolean nuevaMatricula = false;
         String matricula = nuevoCoche.getMatriculaCoche();
 
-
-            for (Coche coche : listaCoches){
-                nuevaMatricula = true;
-                if (coche.getMatriculaCoche().equals(matricula)){
-                    nuevaMatricula = false;
-                    System.err.println("---> El Coche ya existe <---");
-                    break;
-                }
+        for (Coche coche : listaCoches) {
+            nuevaMatricula = true;
+            if (coche.getMatriculaCoche().equals(matricula)) {
+                nuevaMatricula = false;
+                break;
             }
-
+        }
         //si valido add a la lista
-
+        if (nuevaMatricula) {
+            listaCoches.add(nuevoCoche);
+        }
         //si no valido return false;
-        return;
+        return nuevaMatricula;
+    }
+
+    private boolean registrarCliente(Cliente nuevoCliente) {
+        //comprobar si el cliente ya existe
+        boolean nuevoDni = false;
+        String dni = nuevoCliente.getDniCliente();
+
+        for (Cliente cliente : listaClientes){
+            nuevoDni = true;
+            if (cliente.getDniCliente().equals(dni)){
+                nuevoDni = false;
+                break;
+            }
+        }
+        //si el cliente es nuevo lo añadimos
+        if (nuevoDni){
+            listaClientes.add(nuevoCliente);
+        }
+        //si no es cliente nuevo return false;
+        return nuevoDni;
     }
 
     public void run() {
@@ -65,8 +87,9 @@ public class GestionConcesionario {
 
             if (opcion == 1) {
                 Coche nuevoCoche = view.menuAnhadirCoche(listaCoches);
-                boolean added = anhadirCoche(nuevoCoche);
-                if(!added) view.mostarError();
+                boolean nuevaMatricula = anhadirCoche(nuevoCoche);
+                if (!nuevaMatricula) view.mostrarErrorCoche();
+                //view.mostrarListaCoches(listaCoches);
             }
             if (opcion == 2) {
 
@@ -77,17 +100,20 @@ public class GestionConcesionario {
                 view.buscarCoches(listaCoches);
             }
             if (opcion == 4) {
-                Cliente nuevoCliente = view.registrarCliente(listaClientes);
-                listaClientes.add(nuevoCliente);
+                Cliente nuevoCliente = view.menuRegistrarCliente(listaClientes);
+                boolean nuevoDni = registrarCliente(nuevoCliente);
+                if (!nuevoDni) view.mostrarErrorCliente();
+
                 //view.mostrarListaClientes(listaClientes);
 
             }
-            if (opcion == 5){
+            if (opcion == 5) {
                 //Venta nuevaVenta = view.registrarVenta();
             }
 
         }
     }
+
 
     private void loadListaCoches() {
         this.listaCoches = new ArrayList<Coche>();
@@ -119,6 +145,46 @@ public class GestionConcesionario {
         listaClientes.add(new Cliente("Javier Fernández Martínez", "66666666F", "+34634567890"));
         listaClientes.add(new Cliente("Laura García López", "77777777G", "+34645678901"));
     }
+
+    private void loadListaVentas() {
+        this.listaVentas = new ArrayList<Venta>();
+        listaVentas.add(new Venta(1, "11111111A", "1234ABC", LocalDate.of(2022, 1, 15), 12000));
+    }
+
+    private void loadListaVendedores(){
+        this.listaVendedores = new ArrayList<Vendedor>();
+        listaVendedores.add(new Vendedor("Mateo Torres", 101));
+        listaVendedores.add(new Vendedor("Teresa Gutierrez", 102));
+        listaVendedores.add(new Vendedor("Carlos Cazorla", 103));
+
+    }
+
+    /*
+        LocalDate localDate = LocalDate.parse("2017-07-22");
+        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+
+        //to LocalDate
+        LocalDate zonedToLocalDate = zonedDateTime.toLocalDate();
+        System.out.println(zonedToLocalDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+        String text = zonedToLocalDate.format(formatter);
+        //LocalDate parsedDate = LocalDate.parse(text, formatter);
+        System.out.println(text);
+
+
+        // create a ZonedDateTime object
+        ZonedDateTime zonedDT
+                = ZonedDateTime.parse("2018-10-25T23:12:31.123+02:00[Europe/Paris]");
+
+        // apply get() method
+        int year = zonedDT.get(ChronoField.YEAR);
+
+        // print result
+        System.out.println("Value: " + year);
+
+        Month month = zonedDT.getMonth();
+        System.out.println(month);
+        */
 
 
 }

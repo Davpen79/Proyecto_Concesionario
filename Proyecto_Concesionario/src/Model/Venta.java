@@ -1,36 +1,24 @@
 package Model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Venta {
 
     //atributos de una Venta
     private int idVenta;
-    private Cliente clienteVenta;
-    private Coche cocheVendido;
-    private Date fechaVenta;
+    private String dniCliente;
+    private String matriculaCoche;
+    private LocalDate fechaVenta;
     private double precioVenta;
-    private Vendedor vendedorVenta;
+    //private Cliente clienteVenta;
+    //private Coche cocheVendido;
+    //private Vendedor vendedorVenta;
 
     //getters de Venta
 
-    public Vendedor getVendedorVenta() {
-        return vendedorVenta;
-    }
 
-    public int getIdVenta() {
-        return idVenta;
-    }
-
-    public Cliente getClienteVenta() {
-        return clienteVenta;
-    }
-
-    public Coche getCocheVendido() {
-        return cocheVendido;
-    }
-
-    public Date getFechaVenta() {
+    public LocalDate getFechaVenta() {
         return fechaVenta;
     }
 
@@ -38,41 +26,51 @@ public class Venta {
         return precioVenta;
     }
 
+    public String getDniCliente() {
+        return dniCliente;
+    }
+
+    public String getMatriculaCoche() {
+        return matriculaCoche;
+    }
+
+    public int getIdVenta() {
+
+        return idVenta;
+    }
+
+
     //setters de Venta
 
-    public void setVendedorVenta(Vendedor vendedorVenta) {
-        this.vendedorVenta = vendedorVenta;
-    }
 
-    public void setIdVenta(int idVenta) {
-        this.idVenta = idVenta;
-    }
-
-    public void setClienteVenta(Cliente clienteVenta) {
-        this.clienteVenta = clienteVenta;
-    }
-
-    public void setCocheVendido(Coche cocheVendido) {
-        this.cocheVendido = cocheVendido;
-    }
-
-    public void setFechaVenta(Date fechaVenta) {
+    public void setFechaVenta(LocalDate fechaVenta) {
         this.fechaVenta = fechaVenta;
     }
 
-    public void setPrecioVenta(int precioVenta) {
+    public void setPrecioVenta(double precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    public void setDniCliente(String dniCliente) {
+        this.dniCliente = dniCliente;
+    }
+
+    public void setMatriculaCoche(String matriculaCoche) {
+        this.matriculaCoche = matriculaCoche;
+    }
+
+    public void setIdVenta(int idVenta) {
+
+        this.idVenta = idVenta;
     }
 
     //constructor de una Venta
 
-
-    public Venta(int idVenta, Cliente clienteVenta, Coche cocheVendido, Date fechaVenta, int precioVenta, Vendedor vendedorVenta) {
+    public Venta(int idVenta, String dniCliente, String matriculaCoche, LocalDate fechaVenta, double precioVenta) {
         this.idVenta = idVenta;
-        this.clienteVenta = clienteVenta;
-        this.cocheVendido = cocheVendido;
+        this.dniCliente = dniCliente;
+        this.matriculaCoche = matriculaCoche;
         this.fechaVenta = fechaVenta;
         this.precioVenta = precioVenta;
-        this.vendedorVenta = vendedorVenta;
     }
 }

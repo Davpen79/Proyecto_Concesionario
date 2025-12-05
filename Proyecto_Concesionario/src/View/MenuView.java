@@ -25,9 +25,8 @@ public class MenuView {
         System.out.println("7. Salir");
 
         while (true) {
-            //System.out.println("Selecciona una opción");
+            //opcion = Integer.parseInt(sc.nextLine());
             opcion = sc.nextInt();
-            //POrqué????
             sc.nextLine();
             if (opcion >= 1 && opcion <= 7) {
                 break;
@@ -43,10 +42,10 @@ public class MenuView {
 
         System.out.println("============ AÑADIR COCHE ============");
         System.out.println("¿Cual es la MARCA del Coche?");
-        String marca = sc.next();
+        String marca = sc.nextLine();
 
         System.out.println("¿Cual es el MODELO del Coche?");
-        String modelo = sc.next();
+        String modelo = sc.nextLine();
 
         System.out.println("¿De que AÑO es el Coche?");
         int anho = sc.nextInt();
@@ -58,7 +57,7 @@ public class MenuView {
         double precio = sc.nextDouble();
 
         System.out.println("¿Cual es la MATRICULA del Coche?");
-        String matricula = sc.next();
+        String matricula = sc.nextLine();
 
         System.out.println("¿El Coche está a la venta o ya ha sido vendido?");
         System.out.println("1. Está a la VENTA");
@@ -77,9 +76,17 @@ public class MenuView {
 
     private void mostrarCoche(Coche coche) {
         //crear variable para convertir boolean
+        boolean cocheVendido = coche.isCocheVendido();
+        String cocheEnVenta;
+        if (!cocheVendido) {
+            cocheEnVenta = "En Venta";
+        } else {
+            cocheEnVenta = "Vendido";
+        }
+        //mostrar información del coche
         System.out.println(coche.getMarcaCoche() + " " + coche.getModeloCoche() + " " + coche.getMatriculaCoche() +
                 " - " + coche.getAnhoCoche() + " - " + coche.getKilometrosCoche() + " Kms" + " - " + coche.getPrecioCoche() +
-                " €" + " - " + (coche.isCocheVendido()));
+                " €" + " - " + cocheEnVenta);
     }
 
     public void mostrarListaCoches(List<Coche> listaCoches) {
@@ -150,25 +157,13 @@ public class MenuView {
         }
     }
 
-    public Cliente registrarCliente(List<Cliente> listaClientes) {
+    public Cliente menuRegistrarCliente(List<Cliente> listaClientes) {
         System.out.println("============ REGISTRAR CLIENTE ============");
         System.out.println("¿Cual es el NOMBRE del Cliente?");
         String nombre = sc.nextLine();
 
-        boolean nuevoDni = false;
-        String dni = null;
-        while (!nuevoDni) {
-            System.out.println("¿Cual es el DNI del Cliente?");
-            dni = sc.nextLine();
-            for (Cliente cliente : listaClientes) {
-                nuevoDni = true;
-                if (cliente.getDniCliente().equals(dni)) {
-                    nuevoDni = false;
-                    System.err.println("---> El Cliente ya existe <---");
-                    break;
-                }
-            }
-        }
+        System.out.println("¿Cual es el DNI del Cliente?");
+        String dni = sc.nextLine();
 
         System.out.println("¿Cual es el TELEFONO del Cliente?");
         String telefono = sc.nextLine();
@@ -209,4 +204,11 @@ public class MenuView {
     }
 
 
+    public void mostrarErrorCoche() {
+        System.err.println("Este coche ya existe");
+    }
+
+    public void mostrarErrorCliente() {
+        System.err.println("Este cliente ya existe");
+    }
 }
