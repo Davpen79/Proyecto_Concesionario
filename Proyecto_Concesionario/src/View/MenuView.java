@@ -2,6 +2,7 @@ package View;
 
 import Model.Cliente;
 import Model.Coche;
+import Model.Venta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,10 +180,10 @@ public class MenuView {
         }
     }
 
-    public void registrarVenta() {
+    public Venta menuRegistrarVenta(List<Venta> listaVentas) {
         System.out.println("============ REGISTRAR VENTA ============");
-        System.out.println("¿Cual es el Identificador de la Venta?");
-        int nuevaVenta = sc.nextInt();
+
+        int nuevaIdVenta = 0;
 
         System.out.println("¿Que DNI tiene el Cliente que ha comprado un Coche?");
         String dniComprador = sc.nextLine();
@@ -190,8 +191,8 @@ public class MenuView {
         System.out.println("¿Que MATRICULA tiene el coche que ha comprado?");
         String matriculaVenta = sc.nextLine();
 
-        System.out.println("¿En que FECHA se ha realizado la Venta? (dd/mm/yyyy)");
-        //Ejemplo: Date fecha = new Date(125, 1, 5);
+        System.out.println("¿En que FECHA se ha realizado la Venta? (yyyy-MM-dd)");
+        //Ejemplo: 2023-10-5
         String fechaVenta = sc.nextLine();
 
         System.out.println("¿Cual es el PRECIO de Venta?");
@@ -200,7 +201,9 @@ public class MenuView {
         System.out.println("¿Quien ha hecho la Venta?");
         String nombreVendedor = sc.nextLine();
 
-        return;
+        Venta nuevaVenta = new Venta(nuevaIdVenta,dniComprador,matriculaVenta,fechaVenta,precioVenta,nombreVendedor);
+
+        return nuevaVenta;
     }
 
 
@@ -210,5 +213,12 @@ public class MenuView {
 
     public void mostrarErrorCliente() {
         System.err.println("Este cliente ya existe");
+    }
+
+    public void mostrarListaVentas(List<Venta> listaVentas) {
+        for (Venta venta : listaVentas) {
+            System.out.println(venta.getIdVenta() + " "+ venta.getDniCliente() + " " + venta.getMatriculaCoche() + " " + venta.getPrecioVenta());
+        }
+
     }
 }

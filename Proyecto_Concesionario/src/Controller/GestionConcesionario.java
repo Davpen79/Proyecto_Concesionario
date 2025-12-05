@@ -7,9 +7,12 @@ import Model.Venta;
 import View.MenuView;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static java.time.ZoneOffset.UTC;
 
 public class GestionConcesionario {
 
@@ -26,6 +29,7 @@ public class GestionConcesionario {
         this.view = view;
         loadListaCoches();
         loadListaClientes();
+        loadListaVentas();
     }
 
     public void registrarVenta(Venta venta) {
@@ -108,7 +112,10 @@ public class GestionConcesionario {
 
             }
             if (opcion == 5) {
-                //Venta nuevaVenta = view.registrarVenta();
+                Venta nuevaVenta = view.menuRegistrarVenta(listaVentas);
+            }
+            if (opcion == 6) {
+                view.mostrarListaVentas(listaVentas);
             }
 
         }
@@ -148,7 +155,9 @@ public class GestionConcesionario {
 
     private void loadListaVentas() {
         this.listaVentas = new ArrayList<Venta>();
-        listaVentas.add(new Venta(1, "11111111A", "1234ABC", LocalDate.of(2022, 1, 15), 12000));
+        listaVentas.add(new Venta(1, "11111111A", "1234ABC", ZonedDateTime.of(2023,12, 5,0,0,0,0, UTC), 12000));
+        listaVentas.add(new Venta(2, "22222222B", "2345JKL", ZonedDateTime.of(2024,2, 10,0,0,0,0, UTC), 9000));
+
     }
 
     private void loadListaVendedores(){

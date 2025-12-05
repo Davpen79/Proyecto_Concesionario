@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class Venta {
@@ -9,7 +10,7 @@ public class Venta {
     private int idVenta;
     private String dniCliente;
     private String matriculaCoche;
-    private LocalDate fechaVenta;
+    private ZonedDateTime fechaVenta;
     private double precioVenta;
     //private Cliente clienteVenta;
     //private Coche cocheVendido;
@@ -18,7 +19,7 @@ public class Venta {
     //getters de Venta
 
 
-    public LocalDate getFechaVenta() {
+    public ZonedDateTime getFechaVenta() {
         return fechaVenta;
     }
 
@@ -43,7 +44,7 @@ public class Venta {
     //setters de Venta
 
 
-    public void setFechaVenta(LocalDate fechaVenta) {
+    public void setFechaVenta(ZonedDateTime fechaVenta) {
         this.fechaVenta = fechaVenta;
     }
 
@@ -66,7 +67,7 @@ public class Venta {
 
     //constructor de una Venta
 
-    public Venta(int idVenta, String dniCliente, String matriculaCoche, LocalDate fechaVenta, double precioVenta) {
+    public Venta(int idVenta, String dniCliente, String matriculaCoche, ZonedDateTime fechaVenta, double precioVenta) {
         this.idVenta = idVenta;
         this.dniCliente = dniCliente;
         this.matriculaCoche = matriculaCoche;
