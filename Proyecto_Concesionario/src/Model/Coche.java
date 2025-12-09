@@ -1,15 +1,13 @@
 package Model;
 
-import java.util.Date;
-
 public class Coche {
 
     //Atributos de la clase Coche
     private String marcaCoche;
     private String modeloCoche;
     private int anhoCoche;
-    private double kilometrosCoche;
-    private double precioCoche;
+    private float kilometrosCoche;
+    private float precioCoche;
     private String matriculaCoche;
     private boolean cocheVendido;
 
@@ -31,11 +29,11 @@ public class Coche {
         return anhoCoche;
     }
 
-    public double getKilometrosCoche() {
+    public float getKilometrosCoche() {
         return kilometrosCoche;
     }
 
-    public double getPrecioCoche() {
+    public float getPrecioCoche() {
         return precioCoche;
     }
 
@@ -45,7 +43,7 @@ public class Coche {
 
     //setters de Coche
 
-    public void setPrecioCoche(double precioCoche) {
+    public void setPrecioCoche(float precioCoche) {
         this.precioCoche = precioCoche;
     }
 
@@ -65,7 +63,7 @@ public class Coche {
         this.anhoCoche = anhoCoche;
     }
 
-    public void setKilometrosCoche(double kilometrosCoche) {
+    public void setKilometrosCoche(float kilometrosCoche) {
         this.kilometrosCoche = kilometrosCoche;
     }
 
@@ -75,7 +73,7 @@ public class Coche {
 
     //Constructor de Coche
 
-    public Coche(String marcaCoche, String modeloCoche, int anhoCoche, double kilometrosCoche, double precioCoche, String matriculaCoche, boolean cocheVendido) {
+    public Coche(String marcaCoche, String modeloCoche, int anhoCoche, float kilometrosCoche, float precioCoche, String matriculaCoche, boolean cocheVendido) {
         this.marcaCoche = marcaCoche;
         this.modeloCoche = modeloCoche;
         this.anhoCoche = anhoCoche;

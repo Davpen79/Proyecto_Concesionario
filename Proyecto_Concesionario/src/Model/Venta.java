@@ -1,8 +1,6 @@
 package Model;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 public class Venta {
 
@@ -11,7 +9,8 @@ public class Venta {
     private String dniCliente;
     private String matriculaCoche;
     private ZonedDateTime fechaVenta;
-    private double precioVenta;
+    private float precioVenta;
+    private int idVendedor;
     //private Cliente clienteVenta;
     //private Coche cocheVendido;
     //private Vendedor vendedorVenta;
@@ -19,11 +18,15 @@ public class Venta {
     //getters de Venta
 
 
+    public int getIdVendedor() {
+        return idVendedor;
+    }
+
     public ZonedDateTime getFechaVenta() {
         return fechaVenta;
     }
 
-    public double getPrecioVenta() {
+    public float getPrecioVenta() {
         return precioVenta;
     }
 
@@ -44,11 +47,15 @@ public class Venta {
     //setters de Venta
 
 
+    public void setIdVendedor(int idVendedor) {
+        this.idVendedor = idVendedor;
+    }
+
     public void setFechaVenta(ZonedDateTime fechaVenta) {
         this.fechaVenta = fechaVenta;
     }
 
-    public void setPrecioVenta(double precioVenta) {
+    public void setPrecioVenta(float precioVenta) {
         this.precioVenta = precioVenta;
     }
 
@@ -67,11 +74,13 @@ public class Venta {
 
     //constructor de una Venta
 
-    public Venta(int idVenta, String dniCliente, String matriculaCoche, ZonedDateTime fechaVenta, double precioVenta) {
+
+    public Venta(int idVenta, String dniCliente, String matriculaCoche, ZonedDateTime fechaVenta, float precioVenta, int idVendedor) {
         this.idVenta = idVenta;
         this.dniCliente = dniCliente;
         this.matriculaCoche = matriculaCoche;
         this.fechaVenta = fechaVenta;
         this.precioVenta = precioVenta;
+        this.idVendedor = idVendedor;
     }
 }
