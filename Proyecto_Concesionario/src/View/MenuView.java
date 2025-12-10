@@ -308,15 +308,6 @@ public class MenuView {
 
     }
 
-    public void mostrarListaVentas(List<Object> listaVentasCompleta) {
-        //for (Object object : listaVentasCompleta) {
-            //System.out.println(venta.getIdVenta() + " " + venta.getDniCliente() + " " + venta.getMatriculaCoche() + " " + venta.getPrecioVenta());
-            System.out.println(listaVentasCompleta.getFirst() + " " + listaVentasCompleta.get(1)+ " "+ listaVentasCompleta.get(2)+
-                                " " + listaVentasCompleta.get(3)+ " "+ listaVentasCompleta.get(4)+ " "+ listaVentasCompleta.get(5));
-       // }
-
-    }
-
     public int menuElegirVendedor(List<Vendedor> listaVendedores) {
         System.out.println("============ ESTADISTICAS VENDEDORES ============");
         System.out.println("1. Estadísticas de " + listaVendedores.getFirst().getNombreVendedor());
@@ -380,6 +371,34 @@ public class MenuView {
             System.out.format(leftAlignFormat, coche.getMarcaCoche(), coche.getModeloCoche(), coche.getMatriculaCoche(),
                     coche.getAnhoCoche(), coche.getKilometrosCoche()+" Km", formato.format(coche.getPrecioCoche()) +" €", cocheEnVenta);
         }
+        System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
+    }
+
+    public void mostrarListaVentas(List<Object> listaVentasCompleta) {
+        //for (Object object : listaVentasCompleta) {
+        //System.out.println(venta.getIdVenta() + " " + venta.getDniCliente() + " " + venta.getMatriculaCoche() + " " + venta.getPrecioVenta());
+        System.out.println(listaVentasCompleta.getFirst() + " " + listaVentasCompleta.get(1)+ " "+ listaVentasCompleta.get(2)+
+                " " + listaVentasCompleta.get(3)+ " "+ listaVentasCompleta.get(4)+ " "+ listaVentasCompleta.get(5));
+        // }
+
+    }
+
+
+    public void pintarTablaVentas(List<Object> listaVentasCompleta){
+        System.out.println("===================================== CATALOGO DE COCHES =====================================");
+        System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
+        System.out.format("|     idVenta     |   CLIENTE   | COCHE  | MATRICULA |   FECHA   | PRECIO |%n");
+        System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
+        String leftAlignFormat = "| %2s | %-25s | %-25s | %9s | %10s | %10f |%n";
+
+        DecimalFormat formato = new DecimalFormat("#.00");
+
+        for (Object object : listaVentasCompleta) {
+
+            System.out.format(leftAlignFormat, listaVentasCompleta.getFirst(), listaVentasCompleta.get(1), listaVentasCompleta.get(2),
+                    listaVentasCompleta.get(3), listaVentasCompleta.get(4), listaVentasCompleta.get(5));
+        }
+
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
     }
 

@@ -132,18 +132,23 @@ public class GestionConcesionario {
             }
             if (opcion == 6) {
 
+                List<Object> listaVentasCompleta = List.of();
+                //List<Object> listaVentaUnica = null;
                 for (Venta venta : listaVentas) {
 
-                    List<Object> listaVentasCompleta = new ArrayList<>();
-                    listaVentasCompleta.add(venta.getIdVenta());
-                    listaVentasCompleta.add(obtenerNombreCliente(venta, listaClientes));
-                    listaVentasCompleta.add(obtenerCocheVenta(venta, listaCoches));
-                    listaVentasCompleta.add(venta.getMatriculaCoche());
+                    ArrayList<Object> listaVentasUnica = new ArrayList<>();
+                    listaVentasUnica.add(venta.getIdVenta());
+                    listaVentasUnica.add(obtenerNombreCliente(venta, listaClientes));
+                    listaVentasUnica.add(obtenerCocheVenta(venta, listaCoches));
+                    listaVentasUnica.add(venta.getMatriculaCoche());
                     String fechaTexto = convertirFecha(venta.getFechaVenta());
-                    listaVentasCompleta.add(fechaTexto);
-                    listaVentasCompleta.add(venta.getPrecioVenta());
+                    listaVentasUnica.add(fechaTexto);
+                    listaVentasUnica.add(venta.getPrecioVenta());
+                    listaVentasCompleta.add(listaVentasUnica);
+                    //view.pintarTablaVentas(listaVentasCompleta);
                     view.mostrarListaVentas(listaVentasCompleta);
                 }
+                view.pintarTablaVentas(listaVentasCompleta);
 
             }
             if (opcion == 7) {
@@ -392,6 +397,29 @@ public class GestionConcesionario {
         Month month = zonedDT.getMonth();
         System.out.println(month);
         */
+        /*
+        import java.util.ArrayList;
+        import java.util.List;
 
+        public class EjemploListaCompuesta {
+        public static void main(String[] args) {
+            List<List<String>> listaCompuesta = new ArrayList<>();
 
+            List<String> lista1 = new ArrayList<>();
+            lista1.add("Elemento 1A");
+            lista1.add("Elemento 1B");
+
+            List<String> lista2 = new ArrayList<>();
+            lista2.add("Elemento 2A");
+            lista2.add("Elemento 2B");
+
+            listaCompuesta.add(lista1);
+            listaCompuesta.add(lista2);
+
+            for (List<String> lista : listaCompuesta) {
+                for (String elemento : lista) {
+                    System.out.println(elemento);
+                }
+            }
+        }*/
 }
