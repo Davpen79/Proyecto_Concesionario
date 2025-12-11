@@ -1,9 +1,6 @@
 package Controller;
 
-import Model.Cliente;
-import Model.Coche;
-import Model.Vendedor;
-import Model.Venta;
+import Model.*;
 import View.MenuView;
 
 import java.time.LocalDate;
@@ -11,7 +8,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 import static java.time.ZoneOffset.UTC;
 
@@ -21,11 +18,127 @@ public class GestionConcesionario {
     public List<Cliente> listaClientes = new ArrayList<>();
     public List<Vendedor> listaVendedores = new ArrayList<>();
     public List<Venta> listaVentas = new ArrayList<>();
-    public List<Object> listaVentaModificada = new ArrayList<>();
-
+    public List<InfoVendedor> listaInfoVentas = new ArrayList<>();
     private MenuView view;
 
-    Scanner sc = new Scanner(System.in);
+    //Scanner sc = new Scanner(System.in);
+
+    public void run() {
+
+        int opcion;
+        MenuView newMenu = new MenuView();
+
+        while (true) {
+
+            opcion = newMenu.menuPrincipal();
+
+            if (opcion == 1) {
+                Coche nuevoCoche = view.menuAnhadirCoche(listaCoches);
+                boolean nuevaMatricula = anhadirCoche(nuevoCoche);
+                if (!nuevaMatricula) view.mostrarErrorCoche();
+            }
+            if (opcion == 2) {
+                view.pintarTablaCochesEnVenta(listaCoches);
+
+            }
+            if (opcion == 3) {
+                view.buscarCoches(listaCoches);
+            }
+            if (opcion == 4) {
+                Cliente nuevoCliente = view.menuRegistrarCliente(listaClientes);
+                boolean nuevoDni = registrarCliente(nuevoCliente);
+                if (!nuevoDni) view.mostrarErrorCliente();
+
+            }
+            if (opcion == 5) {
+                Venta nuevaVenta = view.menuRegistrarVenta(listaVentas);
+                boolean ventaValida = true;
+                //comprobar si existe cliente
+                boolean dniValido = comprobarCliente(nuevaVenta);
+                if (!dniValido) {
+                    view.mostrarErrorClienteInvalido();
+                    ventaValida = false;
+                }
+                //comprobar si existe coche
+                boolean matriculaValida = comprobarCoche(nuevaVenta);
+                if (!matriculaValida) {
+                    view.mostrarErrorCocheInvalido();
+                    ventaValida = false;
+                }
+                //comprobar si existe vendedor
+                boolean vendedorValido = comprobarVendedor(nuevaVenta);
+                if (!vendedorValido) {
+                    view.mostrarErrorVendedorInvalido();
+                    ventaValida = false;
+                }
+
+                if (ventaValida) {
+                    int nuevoIndex = listaVentas.size() + 1;
+                    nuevaVenta.setIdVenta(nuevoIndex);
+                    listaVentas.add(nuevaVenta);
+                }
+            }
+            if (opcion == 6) {
+
+                view.pintarCabeceraTablaVentas();
+                for (Venta venta : listaVentas) {
+
+                    List<String> datosVenta = new ArrayList<>();
+
+                    datosVenta.add(String.valueOf(venta.getIdVenta()));
+                    datosVenta.add(obtenerNombreCliente(venta,listaClientes));
+                    datosVenta.add(obtenerCocheVenta(venta, listaCoches));
+                    datosVenta.add(venta.getMatriculaCoche());
+                    String fechaTexto = convertirFecha(venta.getFechaVenta());
+                    datosVenta.add(fechaTexto);
+                    datosVenta.add(String.valueOf(venta.getPrecioVenta()));
+                    view.mostrarListaVentas(datosVenta);
+
+                }
+                view.pulsarParaContinuar();
+
+            }
+            if (opcion == 7) {
+                view.mostrarOrdenarCoches(listaCoches);
+            }
+            if (opcion == 8) {
+                //List<Object> datosEstadisticos = new ArrayList<>();
+                int idVendedorBuscado = view.menuElegirVendedor(listaVendedores);
+                String nombreVendedorBuscado = buscarNombreVendedor(idVendedorBuscado);
+                //datosEstadisticos.add(nombreVendedorBuscado);
+                //datosEstadisticos.add(calcularTotalCochesVendidos(idVendedorBuscado));
+                //datosEstadisticos.add(calcularTotalVentasVendedor(idVendedorBuscado));
+                //datosEstadisticos.add(calcularPrecioMedioCoche(idVendedorBuscado));
+                Coche cocheMasCaro = calcularCocheMasCaro(idVendedorBuscado);
+                //datosEstadisticos.add(cocheMasCaro.getMarcaCoche());
+                //datosEstadisticos.add(cocheMasCaro.getModeloCoche());
+                //datosEstadisticos.add(cocheMasCaro.getMatriculaCoche());
+                //datosEstadisticos.add(cocheMasCaro.getPrecioCoche());
+                //view.mostrarEstadisticasVendedor(datosEstadisticos);
+
+                int numeroCochesVendidos = calcularTotalCochesVendidos(idVendedorBuscado);
+                float totalVentas = calcularTotalVentasVendedor(idVendedorBuscado);
+                float precioMedioCoche = calcularPrecioMedioCoche(idVendedorBuscado);
+                String marcaCocheMasCaro = cocheMasCaro.getMarcaCoche();
+                String modeloCocheMasCaro = cocheMasCaro.getModeloCoche();
+                String matriculacocheMasCaro = cocheMasCaro.getMatriculaCoche();
+                float precioCocheMasCaro = cocheMasCaro.getPrecioCoche();
+
+                //listaInfoVentas.add(new InfoVendedor(idVendedorBuscado, nombreVendedorBuscado, numeroCochesVendidos,totalVentas,
+                //                        precioMedioCoche, marcaCocheMasCaro,modeloCocheMasCaro, matriculacocheMasCaro, precioCocheMasCaro));
+                InfoVendedor infoVendedor = new InfoVendedor(idVendedorBuscado, nombreVendedorBuscado, numeroCochesVendidos,totalVentas,
+                        precioMedioCoche, marcaCocheMasCaro,modeloCocheMasCaro, matriculacocheMasCaro, precioCocheMasCaro);
+
+                view.mostrarEstadisticasCompletasVendedor(infoVendedor);
+
+            }
+            if (opcion == 9) {
+                break;
+            }
+            //pulsarParaContinuar();
+
+        }
+    }
 
     public GestionConcesionario(MenuView view) {
         this.view = view;
@@ -75,115 +188,14 @@ public class GestionConcesionario {
         return nuevoDni;
     }
 
-    public void run() {
 
-        int opcion;
-        MenuView newMenu = new MenuView();
-
-        while (true) {
-
-            opcion = newMenu.menuPrincipal();
-
-            if (opcion == 1) {
-                Coche nuevoCoche = view.menuAnhadirCoche(listaCoches);
-                boolean nuevaMatricula = anhadirCoche(nuevoCoche);
-                if (!nuevaMatricula) view.mostrarErrorCoche();
-            }
-            if (opcion == 2) {
-                view.pintarTablaCochesEnVenta(listaCoches);
-
-            }
-            if (opcion == 3) {
-                view.buscarCoches(listaCoches);
-            }
-            if (opcion == 4) {
-                Cliente nuevoCliente = view.menuRegistrarCliente(listaClientes);
-                boolean nuevoDni = registrarCliente(nuevoCliente);
-                if (!nuevoDni) view.mostrarErrorCliente();
-
-            }
-            if (opcion == 5) {
-                Venta nuevaVenta = view.menuRegistrarVenta(listaVentas);
-                boolean ventaValida = true;
-                //comprobar si existe cliente
-                boolean dniValido = comprobarCliente(nuevaVenta);
-                if (!dniValido){
-                    view.mostrarErrorClienteInvalido();
-                    ventaValida = false;
-                }
-                //comprobar si existe coche
-                boolean matriculaValida = comprobarCoche(nuevaVenta);
-                if (!matriculaValida) {
-                    view.mostrarErrorCocheInvalido();
-                    ventaValida = false;
-                }
-                //comprobar si existe vendedor
-                boolean vendedorValido = comprobarVendedor(nuevaVenta);
-                if (!vendedorValido){
-                    view.mostrarErrorVendedorInvalido();
-                    ventaValida = false;
-                }
-
-                if (ventaValida) {
-                    int nuevoIndex = listaVentas.size() + 1;
-                    nuevaVenta.setIdVenta(nuevoIndex);
-                    listaVentas.add(nuevaVenta);
-                }
-            }
-            if (opcion == 6) {
-
-                List<Object> listaVentasCompleta = List.of();
-                //List<Object> listaVentaUnica = null;
-                for (Venta venta : listaVentas) {
-
-                    ArrayList<Object> listaVentasUnica = new ArrayList<>();
-                    listaVentasUnica.add(venta.getIdVenta());
-                    listaVentasUnica.add(obtenerNombreCliente(venta, listaClientes));
-                    listaVentasUnica.add(obtenerCocheVenta(venta, listaCoches));
-                    listaVentasUnica.add(venta.getMatriculaCoche());
-                    String fechaTexto = convertirFecha(venta.getFechaVenta());
-                    listaVentasUnica.add(fechaTexto);
-                    listaVentasUnica.add(venta.getPrecioVenta());
-                    listaVentasCompleta.add(listaVentasUnica);
-                    //view.pintarTablaVentas(listaVentasCompleta);
-                    view.mostrarListaVentas(listaVentasCompleta);
-                }
-                view.pintarTablaVentas(listaVentasCompleta);
-
-            }
-            if (opcion == 7) {
-                view.mostrarOrdenarCoches(listaCoches);
-            }
-            if (opcion == 8) {
-                List<Object> datosEstadisticos = new ArrayList<>();
-                int idVendedorBuscado = view.menuElegirVendedor(listaVendedores);
-                String nombreVendedorBuscado = buscarNombreVendedor(idVendedorBuscado);
-                datosEstadisticos.add(nombreVendedorBuscado);
-                datosEstadisticos.add(calcularTotalCochesVendidos(idVendedorBuscado));
-                datosEstadisticos.add(calcularTotalVentasVendedor(idVendedorBuscado));
-                datosEstadisticos.add(calcularPrecioMedioCoche(idVendedorBuscado));
-                Coche cocheMasCaro = calcularCocheMasCaro(idVendedorBuscado);
-                datosEstadisticos.add(cocheMasCaro.getMarcaCoche());
-                datosEstadisticos.add(cocheMasCaro.getModeloCoche());
-                datosEstadisticos.add(cocheMasCaro.getMatriculaCoche());
-                datosEstadisticos.add(cocheMasCaro.getPrecioCoche());
-
-                view.mostrarEstadisticasVendedor(datosEstadisticos);
-            }
-            if (opcion == 9) {
-                break;
-            }
-            pulsarParaContinuar();
-
-        }
-    }
 
     private boolean comprobarVendedor(Venta nuevaVenta) {
         //comprobar si el vendedor existe
         boolean vendedorValido = false;
         int idVendedor = nuevaVenta.getIdVendedor();
-        for (Vendedor vendedor : listaVendedores){
-            if (vendedor.getIdVendedor() == idVendedor){
+        for (Vendedor vendedor : listaVendedores) {
+            if (vendedor.getIdVendedor() == idVendedor) {
                 vendedorValido = true;
                 break;
             }
@@ -195,8 +207,8 @@ public class GestionConcesionario {
         //comprobar si el cliente existe
         boolean dniValido = false;
         String dniCliente = venta.getDniCliente();
-        for (Cliente cliente : listaClientes){
-            if (cliente.getDniCliente().equals(dniCliente)){
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getDniCliente().equals(dniCliente)) {
                 dniValido = true;
                 break;
             }
@@ -205,9 +217,7 @@ public class GestionConcesionario {
     }
 
     private boolean comprobarCoche(Venta venta) {
-        //comprobar si el coche existe y está a la venta
-        //boolean matriculaExiste = false;
-        //boolean cocheEnVenta = false;
+
         boolean matriculaValida = false;
         String matricula = venta.getMatriculaCoche();
         for (Coche coche : listaCoches) {
@@ -252,11 +262,11 @@ public class GestionConcesionario {
         return nombreCliente;
     }
 
-    public void pulsarParaContinuar() {
-        System.out.println("Presiona ENTER para continuar");
-        Scanner se = new Scanner(System.in);
-        se.nextLine();
-    }
+//    public void pulsarParaContinuar() {
+//        System.out.println("Presiona ENTER para continuar");
+//        Scanner se = new Scanner(System.in);
+//        se.nextLine();
+//    }
 
     private String buscarNombreVendedor(int idVendedorBuscado) {
         String nombreVendedorBuscado = null;
@@ -370,8 +380,8 @@ public class GestionConcesionario {
         listaVendedores.add(new Vendedor("Carlos Cazorla", 3));
 
     }
-
-    /*
+}
+        /*
         LocalDate localDate = LocalDate.parse("2017-07-22");
         ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
 
@@ -396,30 +406,5 @@ public class GestionConcesionario {
 
         Month month = zonedDT.getMonth();
         System.out.println(month);
+
         */
-        /*
-        import java.util.ArrayList;
-        import java.util.List;
-
-        public class EjemploListaCompuesta {
-        public static void main(String[] args) {
-            List<List<String>> listaCompuesta = new ArrayList<>();
-
-            List<String> lista1 = new ArrayList<>();
-            lista1.add("Elemento 1A");
-            lista1.add("Elemento 1B");
-
-            List<String> lista2 = new ArrayList<>();
-            lista2.add("Elemento 2A");
-            lista2.add("Elemento 2B");
-
-            listaCompuesta.add(lista1);
-            listaCompuesta.add(lista2);
-
-            for (List<String> lista : listaCompuesta) {
-                for (String elemento : lista) {
-                    System.out.println(elemento);
-                }
-            }
-        }*/
-}

@@ -1,9 +1,6 @@
 package View;
 
-import Model.Cliente;
-import Model.Coche;
-import Model.Vendedor;
-import Model.Venta;
+import Model.*;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -17,6 +14,8 @@ public class MenuView {
     Scanner sc = new Scanner(System.in);
 
     public int menuPrincipal() {
+
+        pintarLogo();
 
         int opcion = -1;
 
@@ -33,14 +32,18 @@ public class MenuView {
 
         while (true) {
 
-            opcion = sc.nextInt();
+            try {
+                opcion = sc.nextInt();
+            } catch (InputMismatchException e) {
+                sc.next();
+            }
             sc.nextLine();
             if (opcion >= 1 && opcion <= 9) {
                 break;
             }
-
             System.err.println("Introduce una opción valida");
         }
+
         return opcion;
     }
 
@@ -77,7 +80,9 @@ public class MenuView {
         }
 
         Coche coche = new Coche(marca, modelo, anho, kilometros, precio, matricula, cocheVendido);
+        pulsarParaContinuar();
         return coche;
+
     }
 
     //private void mostrarCoche(Coche coche) {
@@ -111,6 +116,7 @@ public class MenuView {
         //if (opcion == 4) {
         //    busquedaMultiple(listaCoches);
         //}
+        pulsarParaContinuar();
     }
 
     private void buscarPorPrecio(List<Coche> listaCoches) {
@@ -134,14 +140,14 @@ public class MenuView {
             pintarTablaCoches(listaPorPrecio);
             break;
         }
-
+        pulsarParaContinuar();
     }
 
     private void buscarPorAnho(List<Coche> listaCoches) {
         List<Integer> anhosDisponibles = new ArrayList<>();
-        for (Coche coche : listaCoches){
+        for (Coche coche : listaCoches) {
             int anhoCoche = coche.getAnhoCoche();
-            if (!anhosDisponibles.contains(anhoCoche)){
+            if (!anhosDisponibles.contains(anhoCoche)) {
                 anhosDisponibles.add(anhoCoche);
             }
         }
@@ -154,8 +160,7 @@ public class MenuView {
             sc.nextLine();
             if (!anhosDisponibles.contains(anhoBuscado)) {
                 System.err.println("No hay coches disponibles de ese año");
-            }
-            else {
+            } else {
                 anhoDisponible = true;
             }
         }
@@ -169,13 +174,14 @@ public class MenuView {
         }
 
         pintarTablaCoches(listaPorAnho);
+        pulsarParaContinuar();
     }
 
     private void buscarPorMarca(List<Coche> listaCoches) {
         List<String> marcasDisponibles = new ArrayList<>();
-        for (Coche coche : listaCoches){
+        for (Coche coche : listaCoches) {
             String marcaCoche = coche.getMarcaCoche();
-            if (!marcasDisponibles.contains(marcaCoche)){
+            if (!marcasDisponibles.contains(marcaCoche)) {
                 marcasDisponibles.add(marcaCoche);
             }
         }
@@ -191,8 +197,7 @@ public class MenuView {
             marcaBuscada = sc.next();
             if (!marcasDisponibles.contains(marcaBuscada)) {
                 System.err.println("Esa marca no está disponible");
-            }
-            else {
+            } else {
                 marcaDisponible = true;
             }
         }
@@ -206,7 +211,7 @@ public class MenuView {
         }
 
         pintarTablaCoches(listaPorMarca);
-
+        pulsarParaContinuar();
     }
 
     public Cliente menuRegistrarCliente(List<Cliente> listaClientes) {
@@ -221,15 +226,9 @@ public class MenuView {
         String telefono = sc.nextLine();
 
         Cliente nuevocliente = new Cliente(nombre, dni, telefono);
-
+        pulsarParaContinuar();
         return nuevocliente;
     }
-
-    //public void mostrarListaClientes(List<Cliente> listaClientes) {
-    //    for (Cliente cliente : listaClientes) {
-    //        System.out.println(cliente.getNombreCliente() + " " + cliente.getDniCliente() + " " + cliente.getTelefonoCliente());
-    //    }
-    //}
 
     public Venta menuRegistrarVenta(List<Venta> listaVentas) {
         System.out.println("============ REGISTRAR VENTA ============");
@@ -249,7 +248,7 @@ public class MenuView {
             Scanner sc = new Scanner(System.in);
             try {
                 String fechaVentaText = sc.nextLine();
-                newlocalDate  = LocalDate.parse(fechaVentaText);
+                newlocalDate = LocalDate.parse(fechaVentaText);
                 fechaValida = true;
             } catch (DateTimeParseException e) {
                 System.err.println("Formato de fecha incorrecto. Debe ser yyyy-MM-dd");
@@ -264,8 +263,8 @@ public class MenuView {
         int idVendedor = sc.nextInt();
         sc.nextLine();
 
-        Venta nuevaVenta = new Venta(nuevaIdVenta,dniComprador,matriculaVenta,fechaVenta,precioVenta,idVendedor);
-
+        Venta nuevaVenta = new Venta(nuevaIdVenta, dniComprador, matriculaVenta, fechaVenta, precioVenta, idVendedor);
+        pulsarParaContinuar();
         return nuevaVenta;
     }
 
@@ -282,54 +281,84 @@ public class MenuView {
         if (opcion == 3) {
             ordenarPorPrecio(listaCoches);
         }
+        // pulsarParaContinuar();
     }
 
     public void ordenarPorMarca(List<Coche> listaCoches) {
         listaCoches.sort(Comparator.comparing(Coche::getMarcaCoche));
         pintarTablaCoches(listaCoches);
+        //pulsarParaContinuar();
     }
 
     private void ordenarPorAnho(List<Coche> listaCoches) {
         listaCoches.sort(Comparator.comparingInt(Coche::getAnhoCoche));
         pintarTablaCoches(listaCoches);
+        //pulsarParaContinuar();
     }
 
     private void ordenarPorPrecio(List<Coche> listaCoches) {
         listaCoches.sort(Comparator.comparingDouble(Coche::getPrecioCoche));
         pintarTablaCoches(listaCoches);
+        //pulsarParaContinuar();
     }
+
     public void mostrarErrorCoche() {
         System.err.println("Este coche ya existe");
-
+        pulsarParaContinuar();
     }
 
     public void mostrarErrorCliente() {
         System.err.println("Este cliente ya existe");
-
+        pulsarParaContinuar();
     }
 
     public int menuElegirVendedor(List<Vendedor> listaVendedores) {
-        System.out.println("============ ESTADISTICAS VENDEDORES ============");
-        System.out.println("1. Estadísticas de " + listaVendedores.getFirst().getNombreVendedor());
-        System.out.println("2. Estadísticas de " + listaVendedores.get(1).getNombreVendedor());
-        System.out.println("3. Estadísticas de " + listaVendedores.get(2).getNombreVendedor());
-        int vendedorElegido = sc.nextInt();
-        sc.nextLine();
+        int vendedorElegido = 0;
+        while (true) {
+            System.out.println("============ ESTADISTICAS VENDEDORES ============");
+            System.out.println("1. Estadísticas de " + listaVendedores.getFirst().getNombreVendedor());
+            System.out.println("2. Estadísticas de " + listaVendedores.get(1).getNombreVendedor());
+            System.out.println("3. Estadísticas de " + listaVendedores.get(2).getNombreVendedor());
+            try {
+                vendedorElegido = sc.nextInt();
+            } catch (InputMismatchException e) {
+                sc.next();
+            }
+            sc.nextLine();
+            if (vendedorElegido == 1 || vendedorElegido == 2 || vendedorElegido == 3) {
+                break;
+            }
+            System.err.println("No existe ese vendedor");
+        }
 
         return vendedorElegido;
     }
 
-    public void mostrarEstadisticasVendedor(List<Object> datosEstadisticos){
-        System.out.println("============ ESTADISTICAS VENDEDOR ============");
-        System.out.println("El numero de coches vendidos por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(1));
-        System.out.println("La suma total de los coches vendidos por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(2) + " Euros");
-        System.out.println("El valor medio de los coches vendidos por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(3) + " Euros");
-        System.out.println("El coche mas caro vendido por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(4) + " " + datosEstadisticos.get(5)
-                                            + " con matricula " + datosEstadisticos.get(6) + " vendido por " + datosEstadisticos.get(7) + " Euros");
+    //public void mostrarEstadisticasVendedor(List<Object> datosEstadisticos) {
+    //    DecimalFormat formato = new DecimalFormat("#.00");
+    //    System.out.println("============ ESTADISTICAS VENDEDOR ============");
+    //    System.out.println("El numero de coches vendidos por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(1));
+    //    System.out.println("La suma total de los coches vendidos por " + datosEstadisticos.getFirst() + " es: " + formato.format(datosEstadisticos.get(2)) + " Euros");
+    //    System.out.println("El valor medio de los coches vendidos por " + datosEstadisticos.getFirst() + " es: " + formato.format(datosEstadisticos.get(3)) + " Euros");
+    //    System.out.println("El coche mas caro vendido por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(4) + " " + datosEstadisticos.get(5)
+    //            + " con matricula " + datosEstadisticos.get(6) + " vendido por " + formato.format(datosEstadisticos.get(7)) + " Euros");
+    //    System.out.println("===============================================");
+    //    pulsarParaContinuar();
+    //}
 
+    public void mostrarEstadisticasCompletasVendedor(InfoVendedor infoVendedor) {
+        DecimalFormat formato = new DecimalFormat("#.00");
+        System.out.println("============ ESTADISTICAS VENDEDOR ============");
+        System.out.println("El numero de coches vendidos por " + infoVendedor.getNombreVendedor() + " es: " + infoVendedor.getNumeroCochesVendidos());
+        System.out.println("La suma total de los coches vendidos por " + infoVendedor.getNombreVendedor() + " es: " + formato.format(infoVendedor.getTotalVentas()) + " Euros");
+        System.out.println("El valor medio de los coches vendidos por " + infoVendedor.getNombreVendedor() + " es: " + formato.format(infoVendedor.getPrecioMedioCoche()) + " Euros");
+        System.out.println("El coche mas caro vendido por " + infoVendedor.getNombreVendedor() + " es: " + infoVendedor.getMarcaCocheMasCaro() + " " + infoVendedor.getModeloCocheMasCaro()
+                + " con matricula " + infoVendedor.getMatriculaCocheMasCaro() + " vendido por " + formato.format(infoVendedor.getPrecioCocheMasCaro()) + " Euros");
+        System.out.println("===============================================");
+        pulsarParaContinuar();
     }
 
-    public void pintarTablaCochesEnVenta(List<Coche> listaCoches){
+    public void pintarTablaCochesEnVenta(List<Coche> listaCoches) {
         System.out.println("============================= COCHES A LA VENTA =============================");
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+%n");
         System.out.format("|     MARCA     |   MODELO   | MATRICULA |  AÑO  | KILOMETRAJE |   PRECIO   |%n");
@@ -346,12 +375,13 @@ public class MenuView {
         }
         for (Coche coche : listaCochesEnVenta) {
             System.out.format(leftAlignFormat, coche.getMarcaCoche(), coche.getModeloCoche(), coche.getMatriculaCoche(),
-                                coche.getAnhoCoche(), coche.getKilometrosCoche()+" Km",formato.format(coche.getPrecioCoche()) + " €");
+                    coche.getAnhoCoche(), coche.getKilometrosCoche() + " Km", formato.format(coche.getPrecioCoche()) + " €");
         }
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+%n");
+        pulsarParaContinuar();
     }
 
-    public void pintarTablaCoches(List<Coche> listaCoches){
+    public void pintarTablaCoches(List<Coche> listaCoches) {
         System.out.println("===================================== CATALOGO DE COCHES =====================================");
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
         System.out.format("|     MARCA     |   MODELO   | MATRICULA |  AÑO  | KILOMETRAJE |   PRECIO   | DISPONIBILIDAD |%n");
@@ -369,48 +399,60 @@ public class MenuView {
                 cocheEnVenta = "Vendido";
             }
             System.out.format(leftAlignFormat, coche.getMarcaCoche(), coche.getModeloCoche(), coche.getMatriculaCoche(),
-                    coche.getAnhoCoche(), coche.getKilometrosCoche()+" Km", formato.format(coche.getPrecioCoche()) +" €", cocheEnVenta);
+                    coche.getAnhoCoche(), coche.getKilometrosCoche() + " Km", formato.format(coche.getPrecioCoche()) + " €", cocheEnVenta);
         }
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
+        pulsarParaContinuar();
     }
 
-    public void mostrarListaVentas(List<Object> listaVentasCompleta) {
-        //for (Object object : listaVentasCompleta) {
-        //System.out.println(venta.getIdVenta() + " " + venta.getDniCliente() + " " + venta.getMatriculaCoche() + " " + venta.getPrecioVenta());
-        System.out.println(listaVentasCompleta.getFirst() + " " + listaVentasCompleta.get(1)+ " "+ listaVentasCompleta.get(2)+
-                " " + listaVentasCompleta.get(3)+ " "+ listaVentasCompleta.get(4)+ " "+ listaVentasCompleta.get(5));
-        // }
-
-    }
-
-
-    public void pintarTablaVentas(List<Object> listaVentasCompleta){
-        System.out.println("===================================== CATALOGO DE COCHES =====================================");
-        System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
-        System.out.format("|     idVenta     |   CLIENTE   | COCHE  | MATRICULA |   FECHA   | PRECIO |%n");
-        System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
-        String leftAlignFormat = "| %2s | %-25s | %-25s | %9s | %10s | %10f |%n";
-
+    public void mostrarListaVentas(List<String> datosVenta) {
         DecimalFormat formato = new DecimalFormat("#.00");
+        String leftAlignFormat = "| %7s | %-25s | %-25s | %9s | %10s | %10s |%n";
+        System.out.format(leftAlignFormat, datosVenta.getFirst(), datosVenta.get(1), datosVenta.get(2),
+                datosVenta.get(3), datosVenta.get(4), formato.format(Float.parseFloat(datosVenta.get(5))) + " €");
+        System.out.format("+---------+---------------------------+---------------------------+-----------+------------+------------+%n");
+    }
 
-        for (Object object : listaVentasCompleta) {
+    public void pintarCabeceraTablaVentas() {
+        System.out.println("==========================================  LISTA DE VENTAS  ============================================");
+        System.out.format("+---------+---------------------------+---------------------------+-----------+------------+------------+%n");
+        System.out.format("| idVenta |          CLIENTE          |           COCHE           | MATRICULA |   FECHA    |   PRECIO   |%n");
+        System.out.format("+---------+---------------------------+---------------------------+-----------+------------+------------+%n");
 
-            System.out.format(leftAlignFormat, listaVentasCompleta.getFirst(), listaVentasCompleta.get(1), listaVentasCompleta.get(2),
-                    listaVentasCompleta.get(3), listaVentasCompleta.get(4), listaVentasCompleta.get(5));
-        }
-
-        System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
     }
 
     public void mostrarErrorCocheInvalido() {
+
         System.err.println("Ese coche no es valido");
+        pulsarParaContinuar();
     }
 
     public void mostrarErrorClienteInvalido() {
+
         System.err.println("Ese cliente no es valido");
+        pulsarParaContinuar();
     }
 
     public void mostrarErrorVendedorInvalido() {
         System.err.println("Ese vendedor no es valido");
+        pulsarParaContinuar();
     }
+
+    public void pulsarParaContinuar() {
+        System.out.println("Presiona ENTER para continuar");
+        Scanner se = new Scanner(System.in);
+        se.nextLine();
+    }
+
+    public void pintarLogo() {
+        System.out.println("=================================================================================");
+        System.out.println("|     #     #     # ####### ####### #######     #     ##    # #######     #     |");
+        System.out.println("|    # #    #     #    #    #     # #          # #    # #   # #          # #    |");
+        System.out.println("|   #   #   #     #    #    #     # #   ###   #   #   #  #  # #   ###   #   #   |");
+        System.out.println("|  #######  #     #    #    #     # #     #  #######  #   # # #     #  #######  |");
+        System.out.println("| #       # #######    #    ####### ####### #       # #    ## ####### #       # |");
+        System.out.println("=================================================================================");
+    }
+
+
 }

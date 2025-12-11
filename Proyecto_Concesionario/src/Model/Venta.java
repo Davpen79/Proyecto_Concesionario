@@ -11,9 +11,6 @@ public class Venta {
     private ZonedDateTime fechaVenta;
     private float precioVenta;
     private int idVendedor;
-    //private Cliente clienteVenta;
-    //private Coche cocheVendido;
-    //private Vendedor vendedorVenta;
 
     //getters de Venta
 
