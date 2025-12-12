@@ -47,6 +47,11 @@ public class MenuView {
         return opcion;
     }
 
+    /**
+     * Funcion para añadir un coche nuevo a una lista de coches existente
+     * @param listaCoches es la lista de coches existente a la que se añade el coche nuevo
+     * @return El coche nuevo a añadir a la lista de coches
+     */
     public Coche menuAnhadirCoche(List<Coche> listaCoches) {
 
         System.out.println("============ AÑADIR COCHE ============");
@@ -69,37 +74,37 @@ public class MenuView {
         System.out.println("¿Cual es la MATRICULA del Coche?");
         String matricula = sc.nextLine();
 
-        System.out.println("¿El Coche está a la venta o ya ha sido vendido?");
-        System.out.println("1. Está a la VENTA");
-        System.out.println("2. Se ha VENDIDO");
-
-        int estadoVenta = sc.nextInt();
         boolean cocheVendido = false;
-        if (estadoVenta == 2) {
-            cocheVendido = true;
-        }
+        boolean registroValido = false;
+        while (!registroValido) {
+            System.out.println("¿El Coche está a la venta o ya ha sido vendido?");
+            System.out.println("1. Está a la VENTA");
+            System.out.println("2. Se ha VENDIDO");
 
+            int estadoVenta = sc.nextInt();
+
+
+            if (estadoVenta == 2) {
+                cocheVendido = true;
+                registroValido = true;
+            } else if (estadoVenta == 1) {
+                cocheVendido = false;
+                registroValido = true;
+            } else {
+                System.err.println("Debes introducir 1 o 2. Registro del Coche Fallido.");
+                registroValido = false;
+            }
+        }
         Coche coche = new Coche(marca, modelo, anho, kilometros, precio, matricula, cocheVendido);
         pulsarParaContinuar();
         return coche;
 
     }
 
-    //private void mostrarCoche(Coche coche) {
-    //    //crear variable para convertir boolean
-    //    boolean cocheVendido = coche.isCocheVendido();
-    //    String cocheEnVenta;
-    //    if (!cocheVendido) {
-    //        cocheEnVenta = "En Venta";
-    //    } else {
-    //        cocheEnVenta = "Vendido";
-    //    }
-    //    //mostrar información del coche
-    //    System.out.println(coche.getMarcaCoche() + " " + coche.getModeloCoche() + " " + coche.getMatriculaCoche() +
-    //            " - " + coche.getAnhoCoche() + " - " + coche.getKilometrosCoche() + " Kms" + " - " + coche.getPrecioCoche() +
-    //            " €" + " - " + cocheEnVenta);
-    //}
-
+    /**
+     *
+     * @param listaCoches
+     */
     public void buscarCoches(List<Coche> listaCoches) {
         System.out.println("============ BUSCAR COCHE ============");
         System.out.println(" 1. Por MARCA\n 2. Por Año\n 3. Por Precio");
@@ -113,19 +118,29 @@ public class MenuView {
         if (opcion == 3) {
             buscarPorPrecio(listaCoches);
         }
-        //if (opcion == 4) {
-        //    busquedaMultiple(listaCoches);
-        //}
-        pulsarParaContinuar();
+        //pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     private void buscarPorPrecio(List<Coche> listaCoches) {
         while (true) {
             System.out.println("Cual es el RANGO de PRECIOS del Coche que buscas?");
-            System.out.println("Indica el precio Mínimo");
-            float precioMinimo = sc.nextFloat();
-            System.out.println("Indica el precio Máximo");
-            float precioMaximo = sc.nextFloat();
+            boolean busquedaValida = false;
+            float precioMinimo = 0;
+            float precioMaximo = 0;
+            while (!busquedaValida) {
+                System.out.println("Indica el precio Mínimo");
+                precioMinimo = sc.nextFloat();
+                System.out.println("Indica el precio Máximo");
+                precioMaximo = sc.nextFloat();
+                if (precioMaximo < precioMinimo){
+
+                    System.err.println("El precio Maximo no puede ser menor que el Minimo");
+                }else {busquedaValida = true;}
+            }
             List<Coche> listaPorPrecio = new ArrayList<>();
             for (Coche coche : listaCoches) {
                 float precioCoche = coche.getPrecioCoche();
@@ -135,14 +150,19 @@ public class MenuView {
             }
             if (listaPorPrecio.isEmpty()) {
                 System.err.println("No hay coches disponibles por ese rango de precios");
+                pulsarParaContinuar();
                 break;
             }
             pintarTablaCoches(listaPorPrecio);
             break;
         }
-        pulsarParaContinuar();
+        //pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     private void buscarPorAnho(List<Coche> listaCoches) {
         List<Integer> anhosDisponibles = new ArrayList<>();
         for (Coche coche : listaCoches) {
@@ -174,9 +194,13 @@ public class MenuView {
         }
 
         pintarTablaCoches(listaPorAnho);
-        pulsarParaContinuar();
+        //pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     private void buscarPorMarca(List<Coche> listaCoches) {
         List<String> marcasDisponibles = new ArrayList<>();
         for (Coche coche : listaCoches) {
@@ -211,9 +235,14 @@ public class MenuView {
         }
 
         pintarTablaCoches(listaPorMarca);
-        pulsarParaContinuar();
+        //pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaClientes
+     * @return
+     */
     public Cliente menuRegistrarCliente(List<Cliente> listaClientes) {
         System.out.println("============ REGISTRAR CLIENTE ============");
         System.out.println("¿Cual es el NOMBRE del Cliente?");
@@ -226,10 +255,16 @@ public class MenuView {
         String telefono = sc.nextLine();
 
         Cliente nuevocliente = new Cliente(nombre, dni, telefono);
+        System.out.println("Cliente registrado correctamente");
         pulsarParaContinuar();
         return nuevocliente;
     }
 
+    /**
+     *
+     * @param listaVentas
+     * @return
+     */
     public Venta menuRegistrarVenta(List<Venta> listaVentas) {
         System.out.println("============ REGISTRAR VENTA ============");
 
@@ -264,10 +299,15 @@ public class MenuView {
         sc.nextLine();
 
         Venta nuevaVenta = new Venta(nuevaIdVenta, dniComprador, matriculaVenta, fechaVenta, precioVenta, idVendedor);
+        System.out.println("Venta registrada correctamente");
         pulsarParaContinuar();
         return nuevaVenta;
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     public void mostrarOrdenarCoches(List<Coche> listaCoches) {
         System.out.println("============ ORDENAR COCHES ============");
         System.out.println(" 1. Por MARCA\n 2. Por Año\n 3. Por Precio");
@@ -284,34 +324,57 @@ public class MenuView {
         // pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     public void ordenarPorMarca(List<Coche> listaCoches) {
         listaCoches.sort(Comparator.comparing(Coche::getMarcaCoche));
         pintarTablaCoches(listaCoches);
         //pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     private void ordenarPorAnho(List<Coche> listaCoches) {
         listaCoches.sort(Comparator.comparingInt(Coche::getAnhoCoche));
         pintarTablaCoches(listaCoches);
         //pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     private void ordenarPorPrecio(List<Coche> listaCoches) {
         listaCoches.sort(Comparator.comparingDouble(Coche::getPrecioCoche));
         pintarTablaCoches(listaCoches);
         //pulsarParaContinuar();
     }
 
+    /**
+     *
+     */
     public void mostrarErrorCoche() {
         System.err.println("Este coche ya existe");
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     */
     public void mostrarErrorCliente() {
         System.err.println("Este cliente ya existe");
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaVendedores
+     * @return
+     */
     public int menuElegirVendedor(List<Vendedor> listaVendedores) {
         int vendedorElegido = 0;
         while (true) {
@@ -334,18 +397,10 @@ public class MenuView {
         return vendedorElegido;
     }
 
-    //public void mostrarEstadisticasVendedor(List<Object> datosEstadisticos) {
-    //    DecimalFormat formato = new DecimalFormat("#.00");
-    //    System.out.println("============ ESTADISTICAS VENDEDOR ============");
-    //    System.out.println("El numero de coches vendidos por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(1));
-    //    System.out.println("La suma total de los coches vendidos por " + datosEstadisticos.getFirst() + " es: " + formato.format(datosEstadisticos.get(2)) + " Euros");
-    //    System.out.println("El valor medio de los coches vendidos por " + datosEstadisticos.getFirst() + " es: " + formato.format(datosEstadisticos.get(3)) + " Euros");
-    //    System.out.println("El coche mas caro vendido por " + datosEstadisticos.getFirst() + " es: " + datosEstadisticos.get(4) + " " + datosEstadisticos.get(5)
-    //            + " con matricula " + datosEstadisticos.get(6) + " vendido por " + formato.format(datosEstadisticos.get(7)) + " Euros");
-    //    System.out.println("===============================================");
-    //    pulsarParaContinuar();
-    //}
-
+    /**
+     *
+     * @param infoVendedor
+     */
     public void mostrarEstadisticasCompletasVendedor(InfoVendedor infoVendedor) {
         DecimalFormat formato = new DecimalFormat("#.00");
         System.out.println("============ ESTADISTICAS VENDEDOR ============");
@@ -358,6 +413,10 @@ public class MenuView {
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     public void pintarTablaCochesEnVenta(List<Coche> listaCoches) {
         System.out.println("============================= COCHES A LA VENTA =============================");
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+%n");
@@ -381,6 +440,10 @@ public class MenuView {
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param listaCoches
+     */
     public void pintarTablaCoches(List<Coche> listaCoches) {
         System.out.println("===================================== CATALOGO DE COCHES =====================================");
         System.out.format("+---------------+------------+-----------+-------+-------------+------------+----------------+%n");
@@ -405,6 +468,10 @@ public class MenuView {
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     * @param datosVenta
+     */
     public void mostrarListaVentas(List<String> datosVenta) {
         DecimalFormat formato = new DecimalFormat("#.00");
         String leftAlignFormat = "| %7s | %-25s | %-25s | %9s | %10s | %10s |%n";
@@ -413,6 +480,9 @@ public class MenuView {
         System.out.format("+---------+---------------------------+---------------------------+-----------+------------+------------+%n");
     }
 
+    /**
+     *
+     */
     public void pintarCabeceraTablaVentas() {
         System.out.println("==========================================  LISTA DE VENTAS  ============================================");
         System.out.format("+---------+---------------------------+---------------------------+-----------+------------+------------+%n");
@@ -421,29 +491,44 @@ public class MenuView {
 
     }
 
+    /**
+     *
+     */
     public void mostrarErrorCocheInvalido() {
 
         System.err.println("Ese coche no es valido");
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     */
     public void mostrarErrorClienteInvalido() {
 
         System.err.println("Ese cliente no es valido");
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     */
     public void mostrarErrorVendedorInvalido() {
         System.err.println("Ese vendedor no es valido");
         pulsarParaContinuar();
     }
 
+    /**
+     *
+     */
     public void pulsarParaContinuar() {
         System.out.println("Presiona ENTER para continuar");
         Scanner se = new Scanner(System.in);
         se.nextLine();
     }
 
+    /**
+     *
+     */
     public void pintarLogo() {
         System.out.println("=================================================================================");
         System.out.println("|     #     #     # ####### ####### #######     #     ##    # #######     #     |");

@@ -9,7 +9,6 @@ public class Cliente {
     private String nombreCliente;
     private String dniCliente;
     private String telefonoCliente;
-    //private List<Coche> cocheCliente; // complejidad innecesaria??
 
     //getters de un Cliente
 
@@ -25,9 +24,6 @@ public class Cliente {
         return telefonoCliente;
     }
 
-    //public List<Coche> getCocheCliente() {
-    //    return cocheCliente;
-    //}
 
     //setters de un Cliente
 
@@ -43,9 +39,6 @@ public class Cliente {
         this.telefonoCliente = telefonoCliente;
     }
 
-    //public void setCocheCliente(ArrayList<Coche> cocheCliente) {
-    //    this.cocheCliente = cocheCliente;
-    //}
 
     //constructor de un Cliente
 

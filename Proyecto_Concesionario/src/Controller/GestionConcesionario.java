@@ -21,8 +21,9 @@ public class GestionConcesionario {
     public List<InfoVendedor> listaInfoVentas = new ArrayList<>();
     private MenuView view;
 
-    //Scanner sc = new Scanner(System.in);
-
+    /**
+     *
+     */
     public void run() {
 
         int opcion;
@@ -102,32 +103,21 @@ public class GestionConcesionario {
                 view.mostrarOrdenarCoches(listaCoches);
             }
             if (opcion == 8) {
-                //List<Object> datosEstadisticos = new ArrayList<>();
+
                 int idVendedorBuscado = view.menuElegirVendedor(listaVendedores);
                 String nombreVendedorBuscado = buscarNombreVendedor(idVendedorBuscado);
-                //datosEstadisticos.add(nombreVendedorBuscado);
-                //datosEstadisticos.add(calcularTotalCochesVendidos(idVendedorBuscado));
-                //datosEstadisticos.add(calcularTotalVentasVendedor(idVendedorBuscado));
-                //datosEstadisticos.add(calcularPrecioMedioCoche(idVendedorBuscado));
                 Coche cocheMasCaro = calcularCocheMasCaro(idVendedorBuscado);
-                //datosEstadisticos.add(cocheMasCaro.getMarcaCoche());
-                //datosEstadisticos.add(cocheMasCaro.getModeloCoche());
-                //datosEstadisticos.add(cocheMasCaro.getMatriculaCoche());
-                //datosEstadisticos.add(cocheMasCaro.getPrecioCoche());
-                //view.mostrarEstadisticasVendedor(datosEstadisticos);
 
                 int numeroCochesVendidos = calcularTotalCochesVendidos(idVendedorBuscado);
                 float totalVentas = calcularTotalVentasVendedor(idVendedorBuscado);
                 float precioMedioCoche = calcularPrecioMedioCoche(idVendedorBuscado);
                 String marcaCocheMasCaro = cocheMasCaro.getMarcaCoche();
                 String modeloCocheMasCaro = cocheMasCaro.getModeloCoche();
-                String matriculacocheMasCaro = cocheMasCaro.getMatriculaCoche();
+                String matriculaCocheMasCaro = cocheMasCaro.getMatriculaCoche();
                 float precioCocheMasCaro = cocheMasCaro.getPrecioCoche();
 
-                //listaInfoVentas.add(new InfoVendedor(idVendedorBuscado, nombreVendedorBuscado, numeroCochesVendidos,totalVentas,
-                //                        precioMedioCoche, marcaCocheMasCaro,modeloCocheMasCaro, matriculacocheMasCaro, precioCocheMasCaro));
                 InfoVendedor infoVendedor = new InfoVendedor(idVendedorBuscado, nombreVendedorBuscado, numeroCochesVendidos,totalVentas,
-                        precioMedioCoche, marcaCocheMasCaro,modeloCocheMasCaro, matriculacocheMasCaro, precioCocheMasCaro);
+                        precioMedioCoche, marcaCocheMasCaro,modeloCocheMasCaro, matriculaCocheMasCaro, precioCocheMasCaro);
 
                 view.mostrarEstadisticasCompletasVendedor(infoVendedor);
 
@@ -135,11 +125,14 @@ public class GestionConcesionario {
             if (opcion == 9) {
                 break;
             }
-            //pulsarParaContinuar();
 
         }
     }
 
+    /**
+     *
+     * @param view
+     */
     public GestionConcesionario(MenuView view) {
         this.view = view;
         loadListaCoches();
@@ -148,6 +141,11 @@ public class GestionConcesionario {
         loadListaVendedores();
     }
 
+    /**
+     *
+     * @param nuevoCoche
+     * @return
+     */
     public boolean anhadirCoche(Coche nuevoCoche) {
         //comprobar si el coche es valido
         boolean nuevaMatricula = false;
@@ -168,6 +166,11 @@ public class GestionConcesionario {
         return nuevaMatricula;
     }
 
+    /**
+     *
+     * @param nuevoCliente
+     * @return
+     */
     private boolean registrarCliente(Cliente nuevoCliente) {
         //comprobar si el cliente ya existe
         boolean nuevoDni = false;
@@ -188,8 +191,11 @@ public class GestionConcesionario {
         return nuevoDni;
     }
 
-
-
+    /**
+     *
+     * @param nuevaVenta
+     * @return
+     */
     private boolean comprobarVendedor(Venta nuevaVenta) {
         //comprobar si el vendedor existe
         boolean vendedorValido = false;
@@ -203,6 +209,11 @@ public class GestionConcesionario {
         return vendedorValido;
     }
 
+    /**
+     *
+     * @param venta
+     * @return
+     */
     private boolean comprobarCliente(Venta venta) {
         //comprobar si el cliente existe
         boolean dniValido = false;
@@ -216,6 +227,11 @@ public class GestionConcesionario {
         return dniValido;
     }
 
+    /**
+     *
+     * @param venta
+     * @return
+     */
     private boolean comprobarCoche(Venta venta) {
 
         boolean matriculaValida = false;
@@ -229,6 +245,11 @@ public class GestionConcesionario {
         return matriculaValida;
     }
 
+    /**
+     *
+     * @param fechaVenta
+     * @return
+     */
     private String convertirFecha(ZonedDateTime fechaVenta) {
 
         LocalDate zonedToLocalDate = fechaVenta.toLocalDate();
@@ -238,6 +259,12 @@ public class GestionConcesionario {
         return fechaTexto;
     }
 
+    /**
+     *
+     * @param venta
+     * @param listaCoches
+     * @return
+     */
     private String obtenerCocheVenta(Venta venta, List<Coche> listaCoches) {
         String cocheVenta = "";
         String matriculaCoche = venta.getMatriculaCoche();
@@ -250,6 +277,12 @@ public class GestionConcesionario {
         return cocheVenta;
     }
 
+    /**
+     *
+     * @param venta
+     * @param listaClientes
+     * @return
+     */
     private String obtenerNombreCliente(Venta venta, List<Cliente> listaClientes) {
         String nombreCliente = "";
         String dniCliente = venta.getDniCliente();
@@ -262,12 +295,11 @@ public class GestionConcesionario {
         return nombreCliente;
     }
 
-//    public void pulsarParaContinuar() {
-//        System.out.println("Presiona ENTER para continuar");
-//        Scanner se = new Scanner(System.in);
-//        se.nextLine();
-//    }
-
+    /**
+     *
+     * @param idVendedorBuscado
+     * @return
+     */
     private String buscarNombreVendedor(int idVendedorBuscado) {
         String nombreVendedorBuscado = null;
         for (Vendedor vendedor : listaVendedores) {
@@ -278,6 +310,11 @@ public class GestionConcesionario {
         return nombreVendedorBuscado;
     }
 
+    /**
+     *
+     * @param idVendedor
+     * @return
+     */
     private Coche calcularCocheMasCaro(int idVendedor) {
         float mayorVenta = 0;
         String matriculaCocheVendido = null;
@@ -297,6 +334,11 @@ public class GestionConcesionario {
         return cocheMasCaro;
     }
 
+    /**
+     *
+     * @param idVendedor
+     * @return
+     */
     private int calcularTotalCochesVendidos(int idVendedor) {
         int numeroCochesVendidos = 0;
         for (Venta venta : listaVentas) {
@@ -307,6 +349,11 @@ public class GestionConcesionario {
         return numeroCochesVendidos;
     }
 
+    /**
+     *
+     * @param idVendedor
+     * @return
+     */
     private float calcularTotalVentasVendedor(int idVendedor) {
         float ventasTotales = 0;
         for (Venta venta : listaVentas) {
@@ -317,6 +364,11 @@ public class GestionConcesionario {
         return ventasTotales;
     }
 
+    /**
+     *
+     * @param idVendedor
+     * @return
+     */
     public float calcularPrecioMedioCoche(int idVendedor) {
         float precioTotal = 0;
         int numeroVentas = 0;
@@ -330,6 +382,9 @@ public class GestionConcesionario {
         return precioMedio;
     }
 
+    /**
+     *
+     */
     private void loadListaCoches() {
         this.listaCoches = new ArrayList<Coche>();
         listaCoches.add(new Coche("Seat", "Ibiza", 2018, 580000, 12000, "1234ABC", true));
@@ -350,6 +405,9 @@ public class GestionConcesionario {
 
     }
 
+    /**
+     *
+     */
     private void loadListaClientes() {
         this.listaClientes = new ArrayList<Cliente>();
         listaClientes.add(new Cliente("Luis Martinez Montes", "11111111A", "+346784152"));
@@ -361,6 +419,9 @@ public class GestionConcesionario {
         listaClientes.add(new Cliente("Laura García López", "77777777G", "+34645678901"));
     }
 
+    /**
+     *
+     */
     private void loadListaVentas() {
         this.listaVentas = new ArrayList<Venta>();
         listaVentas.add(new Venta(1, "11111111A", "1234ABC", ZonedDateTime.of(2023, 12, 5, 0, 0, 0, 0, UTC), 12000, 1));
@@ -373,6 +434,9 @@ public class GestionConcesionario {
 
     }
 
+    /**
+     *
+     */
     private void loadListaVendedores() {
         this.listaVendedores = new ArrayList<Vendedor>();
         listaVendedores.add(new Vendedor("Mateo Torres", 1));
@@ -381,30 +445,4 @@ public class GestionConcesionario {
 
     }
 }
-        /*
-        LocalDate localDate = LocalDate.parse("2017-07-22");
-        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
 
-        //to LocalDate
-        LocalDate zonedToLocalDate = zonedDateTime.toLocalDate();
-        System.out.println(zonedToLocalDate);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-        String text = zonedToLocalDate.format(formatter);
-        //LocalDate parsedDate = LocalDate.parse(text, formatter);
-        System.out.println(text);
-
-
-        // create a ZonedDateTime object
-        ZonedDateTime zonedDT
-                = ZonedDateTime.parse("2018-10-25T23:12:31.123+02:00[Europe/Paris]");
-
-        // apply get() method
-        int year = zonedDT.get(ChronoField.YEAR);
-
-        // print result
-        System.out.println("Value: " + year);
-
-        Month month = zonedDT.getMonth();
-        System.out.println(month);
-
-        */

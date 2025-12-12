@@ -11,7 +11,5 @@ public class Programa {
         GestionConcesionario gestionControlador = new GestionConcesionario(view);
         gestionControlador.run();
 
-        //System.out.println();
-
     }
 }
