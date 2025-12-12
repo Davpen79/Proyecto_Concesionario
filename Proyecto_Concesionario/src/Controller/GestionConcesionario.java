@@ -18,11 +18,23 @@ public class GestionConcesionario {
     public List<Cliente> listaClientes = new ArrayList<>();
     public List<Vendedor> listaVendedores = new ArrayList<>();
     public List<Venta> listaVentas = new ArrayList<>();
-    public List<InfoVendedor> listaInfoVentas = new ArrayList<>();
+
     private MenuView view;
 
     /**
-     *
+     * Crea una vista y carga en memoria listas de Coches, Clientes, Ventas y Vendedores
+     * @param view
+     */
+    public GestionConcesionario(MenuView view) {
+        this.view = view;
+        loadListaCoches();
+        loadListaClientes();
+        loadListaVentas();
+        loadListaVendedores();
+    }
+
+    /**
+     * Funcion que controla todos los procesos del programa
      */
     public void run() {
 
@@ -34,8 +46,8 @@ public class GestionConcesionario {
             opcion = newMenu.menuPrincipal();
 
             if (opcion == 1) {
-                Coche nuevoCoche = view.menuAnhadirCoche(listaCoches);
-                boolean nuevaMatricula = anhadirCoche(nuevoCoche);
+                Coche nuevoCoche = view.menuAnhadirCoche();
+                boolean nuevaMatricula = anhadirCoche(nuevoCoche, listaCoches);
                 if (!nuevaMatricula) view.mostrarErrorCoche();
             }
             if (opcion == 2) {
@@ -46,28 +58,28 @@ public class GestionConcesionario {
                 view.buscarCoches(listaCoches);
             }
             if (opcion == 4) {
-                Cliente nuevoCliente = view.menuRegistrarCliente(listaClientes);
-                boolean nuevoDni = registrarCliente(nuevoCliente);
+                Cliente nuevoCliente = view.menuRegistrarCliente();
+                boolean nuevoDni = registrarCliente(nuevoCliente, listaClientes);
                 if (!nuevoDni) view.mostrarErrorCliente();
 
             }
             if (opcion == 5) {
-                Venta nuevaVenta = view.menuRegistrarVenta(listaVentas);
+                Venta nuevaVenta = view.menuRegistrarVenta();
                 boolean ventaValida = true;
                 //comprobar si existe cliente
-                boolean dniValido = comprobarCliente(nuevaVenta);
+                boolean dniValido = comprobarCliente(nuevaVenta, listaClientes);
                 if (!dniValido) {
                     view.mostrarErrorClienteInvalido();
                     ventaValida = false;
                 }
                 //comprobar si existe coche
-                boolean matriculaValida = comprobarCoche(nuevaVenta);
+                boolean matriculaValida = comprobarCoche(nuevaVenta, listaCoches);
                 if (!matriculaValida) {
                     view.mostrarErrorCocheInvalido();
                     ventaValida = false;
                 }
                 //comprobar si existe vendedor
-                boolean vendedorValido = comprobarVendedor(nuevaVenta);
+                boolean vendedorValido = comprobarVendedor(nuevaVenta, listaVendedores);
                 if (!vendedorValido) {
                     view.mostrarErrorVendedorInvalido();
                     ventaValida = false;
@@ -87,7 +99,7 @@ public class GestionConcesionario {
                     List<String> datosVenta = new ArrayList<>();
 
                     datosVenta.add(String.valueOf(venta.getIdVenta()));
-                    datosVenta.add(obtenerNombreCliente(venta,listaClientes));
+                    datosVenta.add(obtenerNombreCliente(venta, listaClientes));
                     datosVenta.add(obtenerCocheVenta(venta, listaCoches));
                     datosVenta.add(venta.getMatriculaCoche());
                     String fechaTexto = convertirFecha(venta.getFechaVenta());
@@ -106,18 +118,18 @@ public class GestionConcesionario {
 
                 int idVendedorBuscado = view.menuElegirVendedor(listaVendedores);
                 String nombreVendedorBuscado = buscarNombreVendedor(idVendedorBuscado);
-                Coche cocheMasCaro = calcularCocheMasCaro(idVendedorBuscado);
+                Venta cocheMasCaro = calcularCocheMasCaro(idVendedorBuscado, listaVentas);
 
-                int numeroCochesVendidos = calcularTotalCochesVendidos(idVendedorBuscado);
-                float totalVentas = calcularTotalVentasVendedor(idVendedorBuscado);
-                float precioMedioCoche = calcularPrecioMedioCoche(idVendedorBuscado);
-                String marcaCocheMasCaro = cocheMasCaro.getMarcaCoche();
-                String modeloCocheMasCaro = cocheMasCaro.getModeloCoche();
+                int numeroCochesVendidos = calcularTotalCochesVendidos(idVendedorBuscado, listaVentas);
+                float totalVentas = calcularTotalVentasVendedor(idVendedorBuscado, listaVentas);
+                float precioMedioCoche = calcularPrecioMedioCoche(idVendedorBuscado, listaVentas);
                 String matriculaCocheMasCaro = cocheMasCaro.getMatriculaCoche();
-                float precioCocheMasCaro = cocheMasCaro.getPrecioCoche();
+                float precioCocheMasCaro = cocheMasCaro.getPrecioVenta();
+                String marcaCocheMasCaro = obtenerMarcaCocheMasCaro(matriculaCocheMasCaro, listaCoches);
+                String modeloCocheMasCaro = obtenerModeloCocheMasCaro(matriculaCocheMasCaro, listaCoches);
 
-                InfoVendedor infoVendedor = new InfoVendedor(idVendedorBuscado, nombreVendedorBuscado, numeroCochesVendidos,totalVentas,
-                        precioMedioCoche, marcaCocheMasCaro,modeloCocheMasCaro, matriculaCocheMasCaro, precioCocheMasCaro);
+                InfoVendedor infoVendedor = new InfoVendedor(idVendedorBuscado, nombreVendedorBuscado, numeroCochesVendidos, totalVentas,
+                        precioMedioCoche, marcaCocheMasCaro, modeloCocheMasCaro, matriculaCocheMasCaro, precioCocheMasCaro);
 
                 view.mostrarEstadisticasCompletasVendedor(infoVendedor);
 
@@ -125,35 +137,56 @@ public class GestionConcesionario {
             if (opcion == 9) {
                 break;
             }
-
         }
     }
 
     /**
-     *
-     * @param view
+     * Funcion que dada una lista de coches y una matricula de Coche, devuelve el Modelo de ese Coche
+     * @param matriculaCocheMasCaro Valor de la matricula del Coche cuyo Modelo se busca
+     * @param listaCoches Lista de objetos de la clase Coche
+     * @return Modelo del Coche buscado
      */
-    public GestionConcesionario(MenuView view) {
-        this.view = view;
-        loadListaCoches();
-        loadListaClientes();
-        loadListaVentas();
-        loadListaVendedores();
+    private String obtenerModeloCocheMasCaro(String matriculaCocheMasCaro, List<Coche> listaCoches) {
+        String modeloCocheMasCaro = "";
+        for (Coche coche : listaCoches) {
+            if (coche.getMatriculaCoche().equals(matriculaCocheMasCaro)) {
+                modeloCocheMasCaro = coche.getMarcaCoche();
+            }
+        }
+        return modeloCocheMasCaro;
     }
 
     /**
-     *
-     * @param nuevoCoche
+     * Funcion que dada una lista de coches y una matricula de Coche, devuelve la Marca de ese Coche
+     * @param matriculaCocheMasCaro Valor de la matricula del Coche cuya Marca se busca
+     * @param listaCoches Lista de objetos de la clase Coche
      * @return
      */
-    public boolean anhadirCoche(Coche nuevoCoche) {
+    private String obtenerMarcaCocheMasCaro(String matriculaCocheMasCaro, List<Coche> listaCoches) {
+        String marcaCocheMasCaro = "";
+        for (Coche coche : listaCoches) {
+            if (coche.getMatriculaCoche().equals(matriculaCocheMasCaro)) {
+                marcaCocheMasCaro = coche.getMarcaCoche();
+            }
+        }
+        return marcaCocheMasCaro;
+    }
+
+    /**
+     * Comprueba si el nuevo coche ya existe en la lista de coches. Si no existe lo añade a la lista
+     * de lo contrario devuelve un valor False
+     * @param nuevoCoche Objeto de la clase Coche
+     * @param listaCoches Lista de objetos de la clase Coche
+     * @return Devuelve False si la matricula del nuevo coche ya existe, si no añade el nuevo coche a la lista de coches
+     */
+    public boolean anhadirCoche(Coche nuevoCoche, List<Coche> listaCoches) {
         //comprobar si el coche es valido
         boolean nuevaMatricula = false;
         String matricula = nuevoCoche.getMatriculaCoche();
 
         for (Coche coche : listaCoches) {
             nuevaMatricula = true;
-            if (coche.getMatriculaCoche().equals(matricula)) {
+            if (coche.getMatriculaCoche().equals(matricula) || matricula.isBlank()) {
                 nuevaMatricula = false;
                 break;
             }
@@ -167,11 +200,13 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param nuevoCliente
-     * @return
+     * Comprueba si el nuevo Cliente ya existe en la lista de Clientes. Si no existe lo añade a la lista
+     * de lo contrario devuelve un valor False
+     * @param nuevoCliente Objeto de la clase Cliente
+     * @param listaClientes Lista de objetos de la clase Cliente
+     * @return Devuelve False si el DNI del nuevo cliente ya existe, si no añade el nuevo cliente a la lista de Clientes
      */
-    private boolean registrarCliente(Cliente nuevoCliente) {
+    private boolean registrarCliente(Cliente nuevoCliente, List<Cliente> listaClientes) {
         //comprobar si el cliente ya existe
         boolean nuevoDni = false;
         String dni = nuevoCliente.getDniCliente();
@@ -192,11 +227,12 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param nuevaVenta
-     * @return
+     * Comprueba si el vendedor de la nueva venta existe en la lista de vendedores
+     * @param nuevaVenta Objeto de la clase Venta
+     * @param listaVendedores Lista de objetos de la clase Vendedor
+     * @return Devuelve False si el vendedor no existe en la lista de vendedores, True si existe
      */
-    private boolean comprobarVendedor(Venta nuevaVenta) {
+    private boolean comprobarVendedor(Venta nuevaVenta, List<Vendedor> listaVendedores) {
         //comprobar si el vendedor existe
         boolean vendedorValido = false;
         int idVendedor = nuevaVenta.getIdVendedor();
@@ -210,11 +246,12 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param venta
-     * @return
+     * Comprueba si el cliente de la nueva venta existe en la lista de Clientes
+     * @param venta Objeto de la clase Venta
+     * @param listaClientes Lista de objetos de la clase Cliente
+     * @return Devuelve False si el Cliente no existe en la lista de Clientes, True en caso contrario.
      */
-    private boolean comprobarCliente(Venta venta) {
+    private boolean comprobarCliente(Venta venta, List<Cliente> listaClientes) {
         //comprobar si el cliente existe
         boolean dniValido = false;
         String dniCliente = venta.getDniCliente();
@@ -228,11 +265,12 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param venta
+     * Comprueba si el coche de la nueva venta existe en la lista de Coches
+     * @param venta Objeto de la clase Venta
+     * @param listaCoches Lista de objetos de la clase Coche
      * @return
      */
-    private boolean comprobarCoche(Venta venta) {
+    private boolean comprobarCoche(Venta venta, List<Coche> listaCoches) {
 
         boolean matriculaValida = false;
         String matricula = venta.getMatriculaCoche();
@@ -246,24 +284,24 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param fechaVenta
-     * @return
+     * Convierte un valor de tipo ZonedDateTime a un String con formato de fecha
+     * @param fechaVenta Fecha en formato ZonedDateTime
+     * @return Devuelve una fecha en formato de texto
      */
     private String convertirFecha(ZonedDateTime fechaVenta) {
 
-        LocalDate zonedToLocalDate = fechaVenta.toLocalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-        String fechaTexto = zonedToLocalDate.format(formatter);
+        LocalDate zonedALocalDate = fechaVenta.toLocalDate();
+        DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+        String fechaTexto = zonedALocalDate.format(formateador);
 
         return fechaTexto;
     }
 
     /**
-     *
-     * @param venta
-     * @param listaCoches
-     * @return
+     * Obtener el coche que se ha vendido en una venta
+     * @param venta Objeto de la clase Venta
+     * @param listaCoches Lista de objetos de la clase Coche
+     * @return El coche que se ha vendido
      */
     private String obtenerCocheVenta(Venta venta, List<Coche> listaCoches) {
         String cocheVenta = "";
@@ -278,10 +316,10 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param venta
-     * @param listaClientes
-     * @return
+     * Obtener el nombre del cliente que ha comprado un coche en una venta
+     * @param venta Objeto de la clase Venta
+     * @param listaClientes Lista de objetos de la clase Cliente
+     * @return El nombre del cliente que ha comprado un coche
      */
     private String obtenerNombreCliente(Venta venta, List<Cliente> listaClientes) {
         String nombreCliente = "";
@@ -296,9 +334,9 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param idVendedorBuscado
-     * @return
+     * Obtener el nombre del vendedor de una venta
+     * @param idVendedorBuscado Valor del id del vendedor buscado
+     * @return El nombre del vendedor que ha participado en una venta
      */
     private String buscarNombreVendedor(int idVendedorBuscado) {
         String nombreVendedorBuscado = null;
@@ -311,35 +349,37 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param idVendedor
-     * @return
+     * Hallar la venta más cara que ha efectuado un vendedor
+     * @param idVendedor Valor del id del vendedor buscado
+     * @param listaVentas Lista de objetos de la clase Venta
+     * @return La venta mas cara realizada
      */
-    private Coche calcularCocheMasCaro(int idVendedor) {
+    private Venta calcularCocheMasCaro(int idVendedor, List<Venta> listaVentas) {
         float mayorVenta = 0;
         String matriculaCocheVendido = null;
-        Coche cocheMasCaro = null;
+        Venta ventaMasCara = null;
         for (Venta venta : listaVentas) {
             if (venta.getIdVendedor() == idVendedor && venta.getPrecioVenta() >= mayorVenta) {
                 mayorVenta = venta.getPrecioVenta();
                 matriculaCocheVendido = venta.getMatriculaCoche();
             }
         }
-        for (Coche coche : listaCoches) {
-            if (coche.getMatriculaCoche().equals(matriculaCocheVendido)) {
-                cocheMasCaro = coche;
+        for (Venta venta : listaVentas) {
+            if (venta.getMatriculaCoche().equals(matriculaCocheVendido)) {
+                ventaMasCara = venta;
             }
         }
 
-        return cocheMasCaro;
+        return ventaMasCara;
     }
 
     /**
-     *
-     * @param idVendedor
-     * @return
+     * Calcular el numero total de coches vendidos por un vendedor
+     * @param idVendedor Valor del id del vendedor buscado
+     * @param listaVentas Lista de objetos de la clase Venta
+     * @return El numero de coches vendidos
      */
-    private int calcularTotalCochesVendidos(int idVendedor) {
+    private int calcularTotalCochesVendidos(int idVendedor, List<Venta> listaVentas) {
         int numeroCochesVendidos = 0;
         for (Venta venta : listaVentas) {
             if (venta.getIdVendedor() == idVendedor) {
@@ -350,11 +390,12 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param idVendedor
-     * @return
+     * Calcular el valor total de las ventas efectuadas por un vendedor
+     * @param idVendedor Valor del id del vendedor buscado
+     * @param listaVentas Lista de objetos de la clase Venta
+     * @return Total de ventas de un vendedor
      */
-    private float calcularTotalVentasVendedor(int idVendedor) {
+    private float calcularTotalVentasVendedor(int idVendedor,  List<Venta> listaVentas) {
         float ventasTotales = 0;
         for (Venta venta : listaVentas) {
             if (venta.getIdVendedor() == idVendedor) {
@@ -365,11 +406,12 @@ public class GestionConcesionario {
     }
 
     /**
-     *
-     * @param idVendedor
-     * @return
+     * Calcular el precio medio de las ventas de un vendedor
+     * @param idVendedor Valor del id del vendedor buscado
+     * @param listaVentas Lista de objetos de la clase Venta
+     * @return Precio medio de las ventas
      */
-    public float calcularPrecioMedioCoche(int idVendedor) {
+    public float calcularPrecioMedioCoche(int idVendedor, List<Venta> listaVentas) {
         float precioTotal = 0;
         int numeroVentas = 0;
         for (Venta venta : listaVentas) {
@@ -383,7 +425,7 @@ public class GestionConcesionario {
     }
 
     /**
-     *
+     * Lista de Coches del Concesionario
      */
     private void loadListaCoches() {
         this.listaCoches = new ArrayList<Coche>();
@@ -406,11 +448,11 @@ public class GestionConcesionario {
     }
 
     /**
-     *
+     * Lista de Clientes del Concesionario
      */
     private void loadListaClientes() {
         this.listaClientes = new ArrayList<Cliente>();
-        listaClientes.add(new Cliente("Luis Martinez Montes", "11111111A", "+346784152"));
+        listaClientes.add(new Cliente("Luis Martinez Montes", "11111111A", "+34678415251"));
         listaClientes.add(new Cliente("Juan Pérez García", "22222222B", "+34612345678"));
         listaClientes.add(new Cliente("María López Rodríguez", "33333333C", "+34687654321"));
         listaClientes.add(new Cliente("Carlos Gómez Fernández", "44444444D", "+34623456789"));
@@ -420,7 +462,7 @@ public class GestionConcesionario {
     }
 
     /**
-     *
+     * Lista de Ventas del Concesionario
      */
     private void loadListaVentas() {
         this.listaVentas = new ArrayList<Venta>();
@@ -435,7 +477,7 @@ public class GestionConcesionario {
     }
 
     /**
-     *
+     * Lista de Vendedores del Concesionario
      */
     private void loadListaVendedores() {
         this.listaVendedores = new ArrayList<Vendedor>();

@@ -46,6 +46,6 @@ public class Cliente {
         this.nombreCliente = nombreCliente;
         this.dniCliente = dniCliente;
         this.telefonoCliente = telefonoCliente;
-        //this.cocheCliente = cocheCliente;
+
     }
 }
