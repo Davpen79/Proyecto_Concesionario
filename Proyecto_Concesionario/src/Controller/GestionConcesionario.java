@@ -14,6 +14,8 @@ import static java.time.ZoneOffset.UTC;
 
 public class GestionConcesionario {
 
+    enum opcionesMenuPrincipal {ANHADIR_COCHE, VER_COCHES_EN_VENTA, BUSCAR_COCHE, REGISTRAR_CLIENTE,
+                                REGISTRAR_VENTA, VER_VENTAS, VER_COCHES_ORDEN, VER_STATS_VENDEDORES, SALIR}
     public List<Coche> listaCoches = new ArrayList<>();
     public List<Cliente> listaClientes = new ArrayList<>();
     public List<Vendedor> listaVendedores = new ArrayList<>();
@@ -23,6 +25,7 @@ public class GestionConcesionario {
 
     /**
      * Crea una vista y carga en memoria listas de Coches, Clientes, Ventas y Vendedores
+     *
      * @param view
      */
     public GestionConcesionario(MenuView view) {
@@ -44,26 +47,29 @@ public class GestionConcesionario {
         while (true) {
 
             opcion = newMenu.menuPrincipal();
+            opcionesMenuPrincipal opcionMenu = opcionesMenuPrincipal.values()[opcion];
 
-            if (opcion == 1) {
+            if (opcionMenu == opcionesMenuPrincipal.ANHADIR_COCHE) {
                 Coche nuevoCoche = view.menuAnhadirCoche();
                 boolean nuevaMatricula = anhadirCoche(nuevoCoche, listaCoches);
                 if (!nuevaMatricula) view.mostrarErrorCoche();
             }
-            if (opcion == 2) {
+            if (opcionMenu == opcionesMenuPrincipal.VER_COCHES_EN_VENTA) {
                 view.pintarTablaCochesEnVenta(listaCoches);
 
             }
-            if (opcion == 3) {
+            if (opcionMenu == opcionesMenuPrincipal.BUSCAR_COCHE) {
                 view.buscarCoches(listaCoches);
             }
-            if (opcion == 4) {
+            if (opcionMenu == opcionesMenuPrincipal.REGISTRAR_CLIENTE) {
                 Cliente nuevoCliente = view.menuRegistrarCliente();
+                boolean clienteValido = comprobarClienteValido(nuevoCliente);
+                if (!clienteValido) view.mostrarErrorDatoEnBlanco();
                 boolean nuevoDni = registrarCliente(nuevoCliente, listaClientes);
                 if (!nuevoDni) view.mostrarErrorCliente();
 
             }
-            if (opcion == 5) {
+            if (opcionMenu == opcionesMenuPrincipal.REGISTRAR_VENTA) {
                 Venta nuevaVenta = view.menuRegistrarVenta();
                 boolean ventaValida = true;
                 //comprobar si existe cliente
@@ -86,12 +92,19 @@ public class GestionConcesionario {
                 }
 
                 if (ventaValida) {
-                    int nuevoIndex = listaVentas.size() + 1;
+                    //int nuevoIndex = listaVentas.size() + 1; Código Antiguo. Id dependía del tamaño de la lista
+                    int nuevoIndex;
+                    if (listaVentas.isEmpty()) {
+                        nuevoIndex = 1; //Comprobamos si la lista está vacía. Si lo está el Id de la nueva venta es 1.
+                    }
+                    else {
+                        nuevoIndex = listaVentas.getLast().getIdVenta() + 1;
+                    } // Ahora el Id no depende del tamaño. Siempre se incrementa y no se puede repetir
                     nuevaVenta.setIdVenta(nuevoIndex);
                     listaVentas.add(nuevaVenta);
                 }
             }
-            if (opcion == 6) {
+            if (opcionMenu == opcionesMenuPrincipal.VER_VENTAS) {
 
                 view.pintarCabeceraTablaVentas();
                 for (Venta venta : listaVentas) {
@@ -111,10 +124,10 @@ public class GestionConcesionario {
                 view.pulsarParaContinuar();
 
             }
-            if (opcion == 7) {
+            if (opcionMenu == opcionesMenuPrincipal.VER_COCHES_ORDEN) {
                 view.mostrarOrdenarCoches(listaCoches);
             }
-            if (opcion == 8) {
+            if (opcionMenu == opcionesMenuPrincipal.VER_STATS_VENDEDORES) {
 
                 int idVendedorBuscado = view.menuElegirVendedor(listaVendedores);
                 String nombreVendedorBuscado = buscarNombreVendedor(idVendedorBuscado);
@@ -134,23 +147,25 @@ public class GestionConcesionario {
                 view.mostrarEstadisticasCompletasVendedor(infoVendedor);
 
             }
-            if (opcion == 9) {
+            if (opcionMenu == opcionesMenuPrincipal.SALIR) {
                 break;
             }
         }
     }
 
+
     /**
      * Funcion que dada una lista de coches y una matricula de Coche, devuelve el Modelo de ese Coche
+     *
      * @param matriculaCocheMasCaro Valor de la matricula del Coche cuyo Modelo se busca
-     * @param listaCoches Lista de objetos de la clase Coche
+     * @param listaCoches           Lista de objetos de la clase Coche
      * @return Modelo del Coche buscado
      */
     private String obtenerModeloCocheMasCaro(String matriculaCocheMasCaro, List<Coche> listaCoches) {
         String modeloCocheMasCaro = "";
         for (Coche coche : listaCoches) {
             if (coche.getMatriculaCoche().equals(matriculaCocheMasCaro)) {
-                modeloCocheMasCaro = coche.getMarcaCoche();
+                modeloCocheMasCaro = coche.getModeloCoche();
             }
         }
         return modeloCocheMasCaro;
@@ -158,8 +173,9 @@ public class GestionConcesionario {
 
     /**
      * Funcion que dada una lista de coches y una matricula de Coche, devuelve la Marca de ese Coche
+     *
      * @param matriculaCocheMasCaro Valor de la matricula del Coche cuya Marca se busca
-     * @param listaCoches Lista de objetos de la clase Coche
+     * @param listaCoches           Lista de objetos de la clase Coche
      * @return
      */
     private String obtenerMarcaCocheMasCaro(String matriculaCocheMasCaro, List<Coche> listaCoches) {
@@ -175,7 +191,8 @@ public class GestionConcesionario {
     /**
      * Comprueba si el nuevo coche ya existe en la lista de coches. Si no existe lo añade a la lista
      * de lo contrario devuelve un valor False
-     * @param nuevoCoche Objeto de la clase Coche
+     *
+     * @param nuevoCoche  Objeto de la clase Coche
      * @param listaCoches Lista de objetos de la clase Coche
      * @return Devuelve False si la matricula del nuevo coche ya existe, si no añade el nuevo coche a la lista de coches
      */
@@ -202,7 +219,8 @@ public class GestionConcesionario {
     /**
      * Comprueba si el nuevo Cliente ya existe en la lista de Clientes. Si no existe lo añade a la lista
      * de lo contrario devuelve un valor False
-     * @param nuevoCliente Objeto de la clase Cliente
+     *
+     * @param nuevoCliente  Objeto de la clase Cliente
      * @param listaClientes Lista de objetos de la clase Cliente
      * @return Devuelve False si el DNI del nuevo cliente ya existe, si no añade el nuevo cliente a la lista de Clientes
      */
@@ -227,8 +245,35 @@ public class GestionConcesionario {
     }
 
     /**
+     * Comprueba si algún dato introducido al añadir un nuevo cliente está en blanco, si lo está el nuevo cliente es inválido
+     * @param nuevoCliente  Objeto de la clase Cliente
+     * @return Devuelve True si todos los datos introducidos no estan en blanco, False si algun dato está en blanco
+     */
+    private boolean comprobarClienteValido(Cliente nuevoCliente) {
+        boolean nuevoClienteValido = false;
+        boolean nombreEnBlanco = comprobarSiEnBlanco(nuevoCliente.getNombreCliente());
+        boolean dniEnBlanco = comprobarSiEnBlanco(nuevoCliente.getDniCliente());
+        boolean telefonoEnBlanco = comprobarSiEnBlanco(nuevoCliente.getTelefonoCliente());
+        if (!nombreEnBlanco & !dniEnBlanco & !telefonoEnBlanco){
+            nuevoClienteValido = true;
+        }
+        return nuevoClienteValido;
+    }
+
+    /**
+     * Comprueba si un texto está en blanco
+     * @param stringVerificado  Variable de tipo String
+     * @return Devuelve True si el texto está en blanco, False en caso contrario
+     */
+    public boolean comprobarSiEnBlanco(String stringVerificado){
+
+        return stringVerificado.isBlank();
+    }
+
+    /**
      * Comprueba si el vendedor de la nueva venta existe en la lista de vendedores
-     * @param nuevaVenta Objeto de la clase Venta
+     *
+     * @param nuevaVenta      Objeto de la clase Venta
      * @param listaVendedores Lista de objetos de la clase Vendedor
      * @return Devuelve False si el vendedor no existe en la lista de vendedores, True si existe
      */
@@ -247,7 +292,8 @@ public class GestionConcesionario {
 
     /**
      * Comprueba si el cliente de la nueva venta existe en la lista de Clientes
-     * @param venta Objeto de la clase Venta
+     *
+     * @param venta         Objeto de la clase Venta
      * @param listaClientes Lista de objetos de la clase Cliente
      * @return Devuelve False si el Cliente no existe en la lista de Clientes, True en caso contrario.
      */
@@ -266,7 +312,8 @@ public class GestionConcesionario {
 
     /**
      * Comprueba si el coche de la nueva venta existe en la lista de Coches
-     * @param venta Objeto de la clase Venta
+     *
+     * @param venta       Objeto de la clase Venta
      * @param listaCoches Lista de objetos de la clase Coche
      * @return
      */
@@ -285,6 +332,7 @@ public class GestionConcesionario {
 
     /**
      * Convierte un valor de tipo ZonedDateTime a un String con formato de fecha
+     *
      * @param fechaVenta Fecha en formato ZonedDateTime
      * @return Devuelve una fecha en formato de texto
      */
@@ -299,7 +347,8 @@ public class GestionConcesionario {
 
     /**
      * Obtener el coche que se ha vendido en una venta
-     * @param venta Objeto de la clase Venta
+     *
+     * @param venta       Objeto de la clase Venta
      * @param listaCoches Lista de objetos de la clase Coche
      * @return El coche que se ha vendido
      */
@@ -317,7 +366,8 @@ public class GestionConcesionario {
 
     /**
      * Obtener el nombre del cliente que ha comprado un coche en una venta
-     * @param venta Objeto de la clase Venta
+     *
+     * @param venta         Objeto de la clase Venta
      * @param listaClientes Lista de objetos de la clase Cliente
      * @return El nombre del cliente que ha comprado un coche
      */
@@ -335,6 +385,7 @@ public class GestionConcesionario {
 
     /**
      * Obtener el nombre del vendedor de una venta
+     *
      * @param idVendedorBuscado Valor del id del vendedor buscado
      * @return El nombre del vendedor que ha participado en una venta
      */
@@ -350,7 +401,8 @@ public class GestionConcesionario {
 
     /**
      * Hallar la venta más cara que ha efectuado un vendedor
-     * @param idVendedor Valor del id del vendedor buscado
+     *
+     * @param idVendedor  Valor del id del vendedor buscado
      * @param listaVentas Lista de objetos de la clase Venta
      * @return La venta mas cara realizada
      */
@@ -375,7 +427,8 @@ public class GestionConcesionario {
 
     /**
      * Calcular el numero total de coches vendidos por un vendedor
-     * @param idVendedor Valor del id del vendedor buscado
+     *
+     * @param idVendedor  Valor del id del vendedor buscado
      * @param listaVentas Lista de objetos de la clase Venta
      * @return El numero de coches vendidos
      */
@@ -391,11 +444,12 @@ public class GestionConcesionario {
 
     /**
      * Calcular el valor total de las ventas efectuadas por un vendedor
-     * @param idVendedor Valor del id del vendedor buscado
+     *
+     * @param idVendedor  Valor del id del vendedor buscado
      * @param listaVentas Lista de objetos de la clase Venta
      * @return Total de ventas de un vendedor
      */
-    private float calcularTotalVentasVendedor(int idVendedor,  List<Venta> listaVentas) {
+    private float calcularTotalVentasVendedor(int idVendedor, List<Venta> listaVentas) {
         float ventasTotales = 0;
         for (Venta venta : listaVentas) {
             if (venta.getIdVendedor() == idVendedor) {
@@ -407,7 +461,8 @@ public class GestionConcesionario {
 
     /**
      * Calcular el precio medio de las ventas de un vendedor
-     * @param idVendedor Valor del id del vendedor buscado
+     *
+     * @param idVendedor  Valor del id del vendedor buscado
      * @param listaVentas Lista de objetos de la clase Venta
      * @return Precio medio de las ventas
      */

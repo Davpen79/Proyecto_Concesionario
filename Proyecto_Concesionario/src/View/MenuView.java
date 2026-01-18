@@ -1,5 +1,6 @@
 package View;
 
+import Controller.GestionConcesionario;
 import Model.*;
 
 import java.text.DecimalFormat;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class MenuView {
+
 
     Scanner sc = new Scanner(System.in);
 
@@ -44,7 +46,7 @@ public class MenuView {
             System.err.println("Introduce una opción valida");
         }
 
-        return opcion;
+        return opcion - 1;
     }
 
     /**
@@ -254,37 +256,20 @@ public class MenuView {
         System.out.println("============ REGISTRAR CLIENTE ============");
 
         String nombre = "";
-        while (nombre.isBlank()) {
-            System.out.println("¿Cual es el NOMBRE del Cliente?");
-            nombre = sc.nextLine();
-            if (nombre.isBlank()) {
-                System.err.println("El nombre del cliente no puede estar vacio");
-            }
-
-        }
+        System.out.println("¿Cual es el NOMBRE del Cliente?");
+        nombre = sc.nextLine();
 
         String dni = "";
-        while (dni.isBlank()) {
-            System.out.println("¿Cual es el DNI del Cliente?");
-            dni = sc.nextLine();
-            if (dni.isBlank()) {
-                System.err.println("El DNI del cliente no puede estar en blanco");
-            }
-        }
+        System.out.println("¿Cual es el DNI del Cliente?");
+        dni = sc.nextLine();
 
         String telefono = "";
-        while (telefono.isBlank()) {
-            System.out.println("¿Cual es el TELEFONO del Cliente?");
-            telefono = sc.nextLine();
-
-            if (telefono.isBlank()) {
-                System.err.println("El telefono no puede estar vacio");
-            }
-        }
+        System.out.println("¿Cual es el TELEFONO del Cliente?");
+        telefono = sc.nextLine();
 
         Cliente nuevocliente = new Cliente(nombre, dni, telefono);
-        System.out.println("Cliente registrado correctamente");
         pulsarParaContinuar();
+
         return nuevocliente;
     }
 
@@ -326,7 +311,7 @@ public class MenuView {
         sc.nextLine();
 
         Venta nuevaVenta = new Venta(nuevaIdVenta, dniComprador, matriculaVenta, fechaVenta, precioVenta, idVendedor);
-        System.out.println("Venta registrada correctamente");
+        //System.out.println("Venta registrada correctamente");
         pulsarParaContinuar();
         return nuevaVenta;
     }
@@ -500,6 +485,7 @@ public class MenuView {
      * @param datosVenta Lista que contiene datos relativos a las ventas del concesionario
      */
     public void mostrarListaVentas(List<String> datosVenta) {
+
         DecimalFormat formato = new DecimalFormat("#.00");
         String leftAlignFormat = "| %7s | %-25s | %-25s | %9s | %10s | %10s |%n";
         System.out.format(leftAlignFormat, datosVenta.getFirst(), datosVenta.get(1), datosVenta.get(2),
@@ -511,6 +497,7 @@ public class MenuView {
      * Muestra en pantalla una cabecera para las tablas de las Ventas
      */
     public void pintarCabeceraTablaVentas() {
+
         System.out.println("==========================================  LISTA DE VENTAS  ============================================");
         System.out.format("+---------+---------------------------+---------------------------+-----------+------------+------------+%n");
         System.out.format("| idVenta |          CLIENTE          |           COCHE           | MATRICULA |   FECHA    |   PRECIO   |%n");
@@ -545,6 +532,14 @@ public class MenuView {
     }
 
     /**
+     * Muestra un mensaje de error si se introducen valores en blanco
+     */
+    public void mostrarErrorDatoEnBlanco() {
+        System.err.println("Has introducido datos en blanco. Intentalo de nuevo.");
+        pulsarParaContinuar();
+    }
+
+    /**
      * Muestra un mensaje para indicar al usuario que debe pulsar un boton (Entrar) para continuar
      */
     public void pulsarParaContinuar() {
@@ -565,6 +560,7 @@ public class MenuView {
         System.out.println("| #       # #######    #    ####### ####### #       # #    ## ####### #       # |");
         System.out.println("=================================================================================");
     }
+
 
 
 }
